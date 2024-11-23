@@ -1,0 +1,11 @@
+{
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                // Run whenever any file is saved
+                "match": ".lua",
+                "cmd": "./build.sh"
+            }
+        ]
+    }
+}
