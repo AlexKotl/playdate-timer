@@ -7,29 +7,37 @@ local gfx = playdate.graphics
 local isRunning = false
 local startTime = nil
 local elapsedTime = 0
+local recordedTimes = {}
 
 local function toggleStopwatch()
-    if stopwatchRunning then
+    -- Stop
+    if isRunning then
         elapsedTime = playdate.getCurrentTimeMilliseconds() - startTime
-        stopwatchRunning = false
+        table.insert(recordedTimes, elapsedTime / 1000)
+        isRunning = false
+        -- log the recorded times
+        for i, time in ipairs(recordedTimes) do
+            print(i, time)
+        end
     else
+        elapsedTime = 0
         startTime = playdate.getCurrentTimeMilliseconds() - elapsedTime
-        stopwatchRunning = true
+        isRunning = true
     end
 end
 
 local function updateScreen()
     gfx.clear()
 
-    local displayTime
-    if stopwatchRunning then
-        displayTime = playdate.getCurrentTimeMilliseconds() - startTime
-    else
-        displayTime = elapsedTime
+    local totalTime = 0
+    for i, time in ipairs(recordedTimes) do
+        totalTime = totalTime + time
     end
+    gfx.drawText(string.format("Today record: %.2f s", totalTime), 10, 10)
 
     if isRunning then
-        gfx.drawText(string.format("Working: %.2f s", displayTime / 1000), 10, 100)
+        local displayTime = (playdate.getCurrentTimeMilliseconds() - startTime) / 1000
+        gfx.drawText(string.format("Working: %.2f s", displayTime), 10, 100)
     else
         gfx.drawText("Press A to start working", 10, 100)
     end
