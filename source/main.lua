@@ -9,6 +9,12 @@ local startTime = nil
 local elapsedTime = 0
 local recordedTimes = {}
 
+local function secondsToTime(seconds)
+    local minutes = math.floor(seconds / 60)
+    local remainingSeconds = math.floor(seconds % 60)
+    return string.format("%02d:%02d", minutes, remainingSeconds)
+end
+
 local function toggleStopwatch()
     -- Stop
     if isRunning then
@@ -33,11 +39,11 @@ local function updateScreen()
     for i, time in ipairs(recordedTimes) do
         totalTime = totalTime + time
     end
-    gfx.drawText(string.format("Today record: %.2f s", totalTime), 10, 10)
+    gfx.drawText("Today record: " .. secondsToTime(totalTime), 10, 10)
 
     if isRunning then
         local displayTime = (playdate.getCurrentTimeMilliseconds() - startTime) / 1000
-        gfx.drawText(string.format("Working: %.2f s", displayTime), 10, 100)
+        gfx.drawText(secondsToTime(displayTime), 10, 100)
     else
         gfx.drawText("Press A to start working", 10, 100)
     end
