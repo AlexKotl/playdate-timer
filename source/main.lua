@@ -3,6 +3,8 @@ import "CoreLibs/graphics"
 import "CoreLibs/timer"
 
 local gfx = playdate.graphics
+local fontDefault = gfx.getSystemFont()
+local fontClock = gfx.font.new("fonts/Mikodacs-Clock")
 
 local isRunning = false
 local startTime = nil
@@ -34,6 +36,7 @@ end
 
 local function updateScreen()
     gfx.clear()
+    gfx.setFont(fontDefault)
 
     local totalTime = 0
     for i, time in ipairs(recordedTimes) do
@@ -43,10 +46,12 @@ local function updateScreen()
 
     if isRunning then
         local displayTime = (playdate.getCurrentTimeMilliseconds() - startTime) / 1000
+        gfx.setFont(fontClock)
         gfx.drawText(secondsToTime(displayTime), 10, 100)
     else
         gfx.drawText("Press A to start working", 10, 100)
     end
+
 end
 
 function playdate.update()
