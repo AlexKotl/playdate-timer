@@ -20,16 +20,19 @@ end
 local function toggleStopwatch()
     -- Stop
     if isRunning then
-        elapsedTime = playdate.getCurrentTimeMilliseconds() - startTime
-        table.insert(recordedTimes, elapsedTime / 1000)
+        local endTime = playdate.getSecondsSinceEpoch();
+        elapsedTime = endTime - startTime
+
+        table.insert(recordedTimes, {
+            ["elapsed"] = elapsedTime,
+            ["start"] = startTime,
+            ["end"] = endTime
+        })
         isRunning = false
-        -- log the recorded times
-        for i, time in ipairs(recordedTimes) do
-            print(i, time)
-        end
+
     else
         elapsedTime = 0
-        startTime = playdate.getCurrentTimeMilliseconds() - elapsedTime
+        startTime = playdate.getSecondsSinceEpoch()
         isRunning = true
     end
 end
@@ -39,13 +42,13 @@ local function updateScreen()
     gfx.setFont(fontDefault)
 
     local totalTime = 0
-    for i, time in ipairs(recordedTimes) do
-        totalTime = totalTime + time
+    for i, record in ipairs(recordedTimes) do
+        totalTime = totalTime + record.elapsed
     end
     gfx.drawText("Today record: " .. secondsToTime(totalTime), 10, 10)
 
     if isRunning then
-        local displayTime = (playdate.getCurrentTimeMilliseconds() - startTime) / 1000
+        local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
         gfx.setFont(fontClock)
         gfx.drawText(secondsToTime(displayTime), 10, 100)
     else
