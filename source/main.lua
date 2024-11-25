@@ -42,13 +42,15 @@ local function toggleStopwatch()
             ["end"] = endTime
         })
         isRunning = false
+        rabbit:setAnimation("idle")
 
     else
         elapsedTime = 0
         startTime = playdate.getSecondsSinceEpoch()
         isRunning = true
-        print("Start time: " .. startTime)
+        rabbit:setAnimation("working")
     end
+
 end
 
 local function drawProgressbar()
