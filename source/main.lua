@@ -2,9 +2,10 @@ import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
 
-local gfx = playdate.graphics
-local fontDefault = gfx.getSystemFont()
-local fontClock = gfx.font.new("fonts/Mikodacs-Clock")
+local gfx<const> = playdate.graphics
+local fontDefault<const> = gfx.getSystemFont()
+local fontClock<const> = gfx.font.new("fonts/Mikodacs-Clock")
+playdate.setAutoLockDisabled(true)
 
 local isRunning = false
 local startTime = nil
