@@ -1,6 +1,7 @@
 import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
+-- import "rabbit"
 
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
@@ -21,6 +22,28 @@ local recordedTimes = {
     --     ["end"] = 785849084
     -- }
 }
+
+-- Setup rabbit sprite
+local spriteSheet = gfx.imagetable.new("assets/rabbit")
+local animatedSprite = gfx.sprite.new()
+
+animatedSprite:moveTo(330, 50)
+
+animatedSprite:add()
+
+local frame = 1
+local frameCount = spriteSheet:getLength()
+local animationSpeed = 100
+
+local animationTimer = playdate.timer.new(animationSpeed, function()
+    animatedSprite:setImage(spriteSheet:getImage(frame))
+
+    frame = frame + 1
+    if frame > frameCount then
+        frame = 1
+    end
+end)
+animationTimer.repeats = true
 
 local function secondsToTime(seconds)
     local minutes = math.floor(seconds / 60)
@@ -69,6 +92,8 @@ end
 local function updateScreen()
     gfx.clear()
     gfx.setFont(fontDefault)
+    gfx.sprite.update()
+    playdate.timer.updateTimers()
 
     local totalTime = 0
     for i, record in ipairs(recordedTimes) do
@@ -81,7 +106,7 @@ local function updateScreen()
         gfx.setFont(fontClock)
         gfx.drawText(secondsToTime(displayTime), 60, 100)
     else
-        gfx.drawText("Press A to start working", 10, 100)
+        gfx.drawText("Press A to start working", 10, 40)
     end
 
     drawProgressbar()
