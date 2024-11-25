@@ -1,11 +1,12 @@
 import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
--- import "rabbit"
+local Rabbit = import "rabbit"
 
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
 local fontClock<const> = gfx.font.new("fonts/Mikodacs-Clock")
+local rabbit = Rabbit:init()
 playdate.setAutoLockDisabled(true)
 
 local isRunning = false
@@ -22,28 +23,6 @@ local recordedTimes = {
     --     ["end"] = 785849084
     -- }
 }
-
--- Setup rabbit sprite
-local spriteSheet = gfx.imagetable.new("assets/rabbit")
-local animatedSprite = gfx.sprite.new()
-
-animatedSprite:moveTo(330, 50)
-
-animatedSprite:add()
-
-local frame = 1
-local frameCount = spriteSheet:getLength()
-local animationSpeed = 100
-
-local animationTimer = playdate.timer.new(animationSpeed, function()
-    animatedSprite:setImage(spriteSheet:getImage(frame))
-
-    frame = frame + 1
-    if frame > frameCount then
-        frame = 1
-    end
-end)
-animationTimer.repeats = true
 
 local function secondsToTime(seconds)
     local minutes = math.floor(seconds / 60)
