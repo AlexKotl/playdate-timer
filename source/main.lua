@@ -1,6 +1,7 @@
 import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
+local Storage = import "storage"
 local Rabbit = import "rabbit"
 
 local gfx<const> = playdate.graphics
@@ -11,7 +12,7 @@ playdate.setAutoLockDisabled(true)
 local isRunning = false
 local startTime = nil
 local elapsedTime = 0
-local recordedTimes = {
+local recordedTimes = Storage.load("recordedTimes") or {
     --     {
     --     ["elapsed"] = 0,
     --     ["start"] = 785869484,
@@ -47,7 +48,7 @@ local function toggleStopwatch()
         })
         isRunning = false
         rabbit:setAnimation("idle")
-
+        Storage.save(recordedTimes, "recordedTimes")
     else
         elapsedTime = 0
         startTime = playdate.getSecondsSinceEpoch()
