@@ -6,7 +6,6 @@ local Rabbit = import "rabbit"
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
 local fontClock<const> = gfx.font.new("fonts/Mikodacs-Clock")
-local rabbit = Rabbit:init()
 playdate.setAutoLockDisabled(true)
 
 local isRunning = false
@@ -23,6 +22,11 @@ local recordedTimes = {
     --     ["end"] = 785849084
     -- }
 }
+
+local screenSprite = gfx.sprite.new(gfx.image.new("assets/screen"))
+screenSprite:moveTo(200, 120)
+screenSprite:add()
+local rabbit = Rabbit:init()
 
 local function secondsToTime(seconds)
     local minutes = math.floor(seconds / 60)
@@ -80,14 +84,14 @@ local function updateScreen()
     for i, record in ipairs(recordedTimes) do
         totalTime = totalTime + record.elapsed
     end
-    gfx.drawText("Today record: " .. secondsToTime(totalTime), 10, 10)
+    gfx.drawText("Today record: " .. secondsToTime(totalTime), 20, 20)
 
     if isRunning then
         local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
         gfx.setFont(fontClock)
-        gfx.drawText(secondsToTime(displayTime), 60, 100)
+        gfx.drawText(secondsToTime(displayTime), 65, 110)
     else
-        gfx.drawText("Press A to start working", 10, 40)
+        gfx.drawText("Press A to start working", 20, 50)
     end
 
     drawProgressbar()

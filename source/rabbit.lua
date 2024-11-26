@@ -10,7 +10,7 @@ function Rabbit:init()
     local self = setmetatable({}, Rabbit)
     self.animation = "idle"
 
-    animatedSprite:moveTo(330, 50)
+    animatedSprite:moveTo(350, 45)
     animatedSprite:add()
 
     local frame = 5
