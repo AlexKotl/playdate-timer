@@ -1,5 +1,10 @@
 local Storage = {}
 
+-- TODO: how to reuse from utils
+local function currentDate()
+    return playdate.getTime().year .. "-" .. playdate.getTime().month .. "-" .. playdate.getTime().day
+end
+
 function Storage.save(data, filename)
     local success, error = playdate.datastore.write(data, filename)
     if not success then
@@ -19,6 +24,19 @@ function Storage.load(filename)
     else
         return data
     end
+end
+
+function Storage.recordedTimesToArchiveRecord(recordedTimes)
+    local archiveRecord = {
+        ["date"] = recordedTimes[1]["date"]
+    }
+    for i, record in ipairs(recordedTimes) do
+        if not archiveRecord[record["type"]] then
+            archiveRecord[record["type"]] = 0
+        end
+        archiveRecord[record["type"]] = archiveRecord[record["type"]] + record["elapsed"]
+    end
+    return archiveRecord
 end
 
 return Storage

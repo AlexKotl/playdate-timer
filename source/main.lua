@@ -3,6 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/timer"
 local Storage = import "storage"
 local Rabbit = import "rabbit"
+local Utils = import "utils"
 
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
@@ -14,6 +15,7 @@ local startTime = nil
 local elapsedTime = 0
 local recordedTimes = Storage.load("recordedTimes") or {
     --     {
+    --      ["type"] = "work",
     --     ["elapsed"] = 0,
     --     ["start"] = 785869484,
     --     ["end"] = 785875484
@@ -24,16 +26,21 @@ local recordedTimes = Storage.load("recordedTimes") or {
     -- }
 }
 
+if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'] ~= Utils.currentDate()) then
+    print("New day, resetting recorded times")
+
+    local archiveData = Storage.load("archiveData") or {}
+    table.insert(archiveData, Storage.recordedTimesToArchiveRecord(recordedTimes))
+    Storage.save(archiveData, "archiveData")
+
+    recordedTimes = {}
+    Storage.save(recordedTimes, "recordedTimes")
+end
+
 local screenSprite = gfx.sprite.new(gfx.image.new("assets/screen"))
 screenSprite:moveTo(200, 120)
 screenSprite:add()
 local rabbit = Rabbit:init()
-
-local function secondsToTime(seconds)
-    local minutes = math.floor(seconds / 60)
-    local remainingSeconds = math.floor(seconds % 60)
-    return string.format("%02d:%02d", minutes, remainingSeconds)
-end
 
 local function toggleStopwatch()
     -- Stop
@@ -42,6 +49,8 @@ local function toggleStopwatch()
         elapsedTime = endTime - startTime
 
         table.insert(recordedTimes, {
+            ["type"] = "work",
+            ["date"] = Utils.currentDate(),
             ["elapsed"] = elapsedTime,
             ["start"] = startTime,
             ["end"] = endTime
@@ -85,12 +94,12 @@ local function updateScreen()
     for i, record in ipairs(recordedTimes) do
         totalTime = totalTime + record.elapsed
     end
-    gfx.drawText("Today record: " .. secondsToTime(totalTime), 20, 20)
+    gfx.drawText("Today record: " .. Utils.secondsToTime(totalTime), 20, 20)
 
     if isRunning then
         local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
         gfx.setFont(fontClock)
-        gfx.drawText(secondsToTime(displayTime), 65, 110)
+        gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
     else
         gfx.drawText("Press A to start working", 20, 50)
     end
