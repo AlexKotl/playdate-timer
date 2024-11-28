@@ -79,6 +79,16 @@ local function drawProgressbar()
             barWidth = 3
         end
         gfx.setColor(gfx.kColorBlack)
+        if record.type == 'meeting' then
+            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeDiagonalLine)
+        elseif record.type == 'gaming' then
+            gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
+        elseif record.type == 'creativity' then
+            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeHorizontalLine)
+        else
+            gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
+        end
+
         gfx.fillRect(barX, 240 - 20, barWidth, 20)
     end
     gfx.setLineWidth(3)
@@ -106,6 +116,7 @@ local function updateScreen()
     else
         gfx.drawText("Press A to start working", 20, 50)
         gfx.drawText("Press B to select project", 40, 185)
+        gfx.setDitherPattern(0.3, gfx.image.kDitherTypeDiagonalLine)
         for i, activity in ipairs(activities) do
             activities[i].icon:draw(36 + ((i - 1) * (64 + 25)), 110)
             if (i == currentActivityNo) then
