@@ -13,18 +13,7 @@ playdate.setAutoLockDisabled(true)
 local isRunning = false
 local startTime = nil
 local elapsedTime = 0
-local recordedTimes = Storage.load("recordedTimes") or {
-    --     {
-    --      ["type"] = "work",
-    --     ["elapsed"] = 0,
-    --     ["start"] = 785869484,
-    --     ["end"] = 785875484
-    -- }, {
-    --     ["elapsed"] = 0,
-    --     ["start"] = 785838284,
-    --     ["end"] = 785849084
-    -- }
-}
+local recordedTimes = Storage.load("recordedTimes") or {}
 
 if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'] ~= Utils.currentDate()) then
     print("New day, resetting recorded times")
@@ -94,7 +83,7 @@ local function updateScreen()
     for i, record in ipairs(recordedTimes) do
         totalTime = totalTime + record.elapsed
     end
-    gfx.drawText("Today record: " .. Utils.secondsToTime(totalTime), 20, 20)
+    gfx.drawText("Today record: " .. Utils.secondsToTime(totalTime, true), 20, 20)
 
     if isRunning then
         local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
