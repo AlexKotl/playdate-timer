@@ -27,7 +27,8 @@ function Rabbit:init()
             frame = 5
         end
     end)
-    animationTimer.repeats = true
+    -- TODO: temp disable animation
+    -- animationTimer.repeats = true
     return self
 end
 

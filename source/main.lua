@@ -14,6 +14,20 @@ local isRunning = false
 local startTime = nil
 local elapsedTime = 0
 local recordedTimes = Storage.load("recordedTimes") or {}
+local activities<const> = {{
+    ["name"] = "work",
+    ["icon"] = gfx.image.new("assets/activities/work")
+}, {
+    ["name"] = "meeting",
+    ["icon"] = gfx.image.new("assets/activities/meeting")
+}, {
+    ["name"] = "gaming",
+    ["icon"] = gfx.image.new("assets/activities/gaming")
+}, {
+    ["name"] = "creativity",
+    ["icon"] = gfx.image.new("assets/activities/creativity")
+}}
+local currentActivityNo = 1
 
 if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'] ~= Utils.currentDate()) then
     print("New day, resetting recorded times")
@@ -26,9 +40,7 @@ if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'
     Storage.save(recordedTimes, "recordedTimes")
 end
 
-local screenSprite = gfx.sprite.new(gfx.image.new("assets/screen"))
-screenSprite:moveTo(200, 120)
-screenSprite:add()
+local screenImage = gfx.image.new("assets/screen")
 local rabbit = Rabbit:init()
 
 local function toggleStopwatch()
@@ -38,7 +50,7 @@ local function toggleStopwatch()
         elapsedTime = endTime - startTime
 
         table.insert(recordedTimes, {
-            ["type"] = "work",
+            ["type"] = activities[currentActivityNo].name,
             ["date"] = Utils.currentDate(),
             ["elapsed"] = elapsedTime,
             ["start"] = startTime,
@@ -77,6 +89,7 @@ local function updateScreen()
     gfx.clear()
     gfx.setFont(fontDefault)
     gfx.sprite.update()
+    screenImage:draw(0, 0)
     playdate.timer.updateTimers()
 
     local totalTime = 0
@@ -87,10 +100,19 @@ local function updateScreen()
 
     if isRunning then
         local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
+        gfx.drawText(string.upper(activities[currentActivityNo].name), 20, 50)
         gfx.setFont(fontClock)
         gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
     else
         gfx.drawText("Press A to start working", 20, 50)
+        gfx.drawText("Press B to select project", 40, 185)
+        for i, activity in ipairs(activities) do
+            activities[i].icon:draw(36 + ((i - 1) * (64 + 25)), 110)
+            if (i == currentActivityNo) then
+                gfx.drawRect(36 + ((i - 1) * (64 + 25)) - 5, 110 - 5, 74, 74)
+            end
+        end
+
     end
 
     drawProgressbar()
@@ -102,4 +124,11 @@ end
 
 function playdate.AButtonDown()
     toggleStopwatch()
+end
+
+function playdate.BButtonDown()
+    currentActivityNo = currentActivityNo + 1
+    if currentActivityNo > #activities then
+        currentActivityNo = 1
+    end
 end
