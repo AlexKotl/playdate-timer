@@ -7,7 +7,8 @@ local Utils = import "utils"
 
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
-local fontClock<const> = gfx.font.new("fonts/Mikodacs-Clock")
+local fontClock<const> = gfx.font.new("fonts/Clock")
+-- local fontClock<const> = gfx.font.new("fonts/Mikodacs-Clock")
 playdate.setAutoLockDisabled(true)
 
 local isRunning = false
