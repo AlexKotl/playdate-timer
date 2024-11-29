@@ -8,7 +8,6 @@ local Utils = import "utils"
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
 local fontClock<const> = gfx.font.new("fonts/Clock")
--- local fontClock<const> = gfx.font.new("fonts/Mikodacs-Clock")
 playdate.setAutoLockDisabled(true)
 
 local isRunning = false
@@ -30,23 +29,28 @@ local activities<const> = {{
 }}
 local currentActivityNo = 1
 
-if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'] ~= Utils.currentDate()) then
-    print("New day, resetting recorded times")
-
-    local archiveData = Storage.load("archiveData") or {}
-    table.insert(archiveData, Storage.recordedTimesToArchiveRecord(recordedTimes))
-    Storage.save(archiveData, "archiveData")
-
-    recordedTimes = {}
-    Storage.save(recordedTimes, "recordedTimes")
-end
-
 local screenImage = gfx.image.new("assets/screen")
 local rabbit = Rabbit:init()
+
+local function checkDateAndSaveArchive()
+    if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'] ~= Utils.currentDate()) then
+        print("New day, resetting recorded times")
+
+        local archiveData = Storage.load("archiveData") or {}
+        table.insert(archiveData, Storage.recordedTimesToArchiveRecord(recordedTimes))
+        Storage.save(archiveData, "archiveData")
+
+        recordedTimes = {}
+        Storage.save(recordedTimes, "recordedTimes")
+    end
+end
+
+checkDateAndSaveArchive()
 
 local function toggleStopwatch()
     -- Stop
     if isRunning then
+        checkDateAndSaveArchive()
         local endTime = playdate.getSecondsSinceEpoch();
         elapsedTime = endTime - startTime
 
