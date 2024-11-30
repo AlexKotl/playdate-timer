@@ -136,11 +136,20 @@ end
 function ReportScreen:update()
     gfx.clear()
     gfx.drawText(archiveWeeks[currentWeekNo], 20, 50)
+    local maxTime = 0
+    for i, record in pairs(archiveByWeek[archiveWeeks[currentWeekNo]]) do
+        maxTime = math.max(maxTime, record.elapsed)
+    end
+    local pixelRate = 100 / maxTime
+
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
-        gfx.drawText(daysOfWeek[day], 20, 50 + day * 20)
+        local x = 30 + (day - 1) * 64
+        gfx.drawText(daysOfWeek[day], x, 210)
         if record then
-            gfx.drawText(record.elapsed, 100, 50 + day * 20)
+            local barHeight = record.elapsed * pixelRate
+            gfx.fillRect(x + 5, 190 - barHeight, 10, barHeight)
+            print(record.elapsed * pixelRate)
         end
     end
 end
