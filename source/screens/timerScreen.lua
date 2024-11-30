@@ -134,13 +134,20 @@ local function updateScreen()
     drawProgressbar()
 end
 
-function playdate.AButtonDown()
+function TimerScreen.AButtonDown()
     toggleStopwatch()
 end
 
-function playdate.rightButtonDown()
+function TimerScreen.rightButtonDown()
     currentActivityNo = currentActivityNo + 1
     if currentActivityNo > #activities then
+        currentActivityNo = #activities
+    end
+end
+
+function TimerScreen.leftButtonDown()
+    currentActivityNo = currentActivityNo - 1
+    if currentActivityNo < 1 then
         currentActivityNo = 1
     end
 end

@@ -4,7 +4,8 @@ ScreenManager.__index = ScreenManager
 function ScreenManager:new()
     local instance = {
         screens = {},
-        activeScreen = nil
+        activeScreen = nil,
+        activeScreenName = nil
     }
     setmetatable(instance, ScreenManager)
     return instance
@@ -21,6 +22,7 @@ function ScreenManager:showScreen(name)
     self.activeScreen = self.screens[name]
     if self.activeScreen and self.activeScreen.show then
         self.activeScreen:show()
+        self.activeScreenName = name
     end
 end
 
@@ -43,4 +45,8 @@ end
 
 function Screen:update()
     -- Code to update screen
+end
+
+function Screen:AButtonDown()
+    -- Code to handle A button down
 end
