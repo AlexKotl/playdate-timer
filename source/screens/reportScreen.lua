@@ -1,6 +1,4 @@
 ReportScreen = Screen:new()
-local Storage = import "storage"
-local Utils = import "utils"
 local gfx<const> = playdate.graphics
 
 local archiveData = {}

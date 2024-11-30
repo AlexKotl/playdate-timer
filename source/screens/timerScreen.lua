@@ -1,9 +1,8 @@
+TimerScreen = Screen:new()
 import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
-local Storage = import "storage"
 local Rabbit = import "rabbit"
-local Utils = import "utils"
 
 local gfx<const> = playdate.graphics
 local fontDefault<const> = gfx.getSystemFont()
@@ -13,7 +12,8 @@ playdate.setAutoLockDisabled(true)
 local isRunning = false
 local startTime = nil
 local elapsedTime = 0
-local recordedTimes = Storage.load("recordedTimes") or {}
+local recordedTimes = {}
+-- local recordedTimes = {}
 local activities<const> = {{
     ["name"] = "work",
     ["icon"] = gfx.image.new("assets/activities/work")
@@ -134,17 +134,24 @@ local function updateScreen()
     drawProgressbar()
 end
 
-function playdate.update()
-    updateScreen()
-end
-
 function playdate.AButtonDown()
     toggleStopwatch()
 end
 
-function playdate.BButtonDown()
+function playdate.rightButtonDown()
     currentActivityNo = currentActivityNo + 1
     if currentActivityNo > #activities then
         currentActivityNo = 1
     end
+end
+
+function TimerScreen:show()
+    recordedTimes = Storage.load("recordedTimes") or {}
+end
+
+function TimerScreen:hide()
+end
+
+function TimerScreen:update()
+    updateScreen()
 end
