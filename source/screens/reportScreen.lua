@@ -1,11 +1,12 @@
 ReportScreen = Screen:new()
 local Storage = import "storage"
+local Utils = import "utils"
 local gfx<const> = playdate.graphics
+
 local archiveData = {}
 local archiveByWeek = {}
 local archiveWeeks = {}
 local currentWeekNo = 1
-
 local daysInMonth<const> = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 local daysOfWeek<const> = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
 
@@ -126,12 +127,13 @@ end
 
 function ReportScreen:update()
     gfx.clear()
-    gfx.drawText(archiveWeeks[currentWeekNo], 20, 50)
+    gfx.drawText("Week: " .. archiveWeeks[currentWeekNo], 20, 20)
     local maxTime = 0
     for i, record in pairs(archiveByWeek[archiveWeeks[currentWeekNo]]) do
         maxTime = math.max(maxTime, record.elapsed)
     end
     local pixelRate = 100 / maxTime
+    gfx.drawText("Max time: " .. Utils.secondsToTime(maxTime, true), 20, 50)
 
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
@@ -141,7 +143,7 @@ function ReportScreen:update()
         if record then
             barHeight = record.elapsed * pixelRate
         end
-        gfx.fillRect(x + 5, 190 - barHeight, 10, barHeight)
+        gfx.fillRect(x + 2, 190 - barHeight, 20, barHeight)
 
     end
 end
