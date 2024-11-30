@@ -2,6 +2,9 @@ ReportScreen = Screen:new()
 local Storage = import "storage"
 local gfx<const> = playdate.graphics
 local archiveData = {}
+local archiveByWeek = {}
+local archiveWeeks = {}
+local currentWeekNo = 1
 
 local daysInMonth<const> = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 
@@ -84,13 +87,39 @@ function ReportScreen:show()
         weekRange.start.year, weekRange.endDate.day, weekRange.endDate.month, weekRange.endDate.year))
 
     for i, record in ipairs(archiveData) do
-
+        -- split date into year, month, day
+        local year, month, day = record.date:match("(%d+)%-(%d+)%-(%d+)")
+        local weekRange = getWeekRange(tonumber(year), tonumber(month), tonumber(day))
+        local weekKey = string.format("%02d.%02d - %02d.%02d", weekRange.start.day, weekRange.start.month,
+            weekRange.endDate.day, weekRange.endDate.month)
+        if archiveByWeek[weekKey] == nil then
+            archiveByWeek[weekKey] = {}
+            table.insert(archiveWeeks, weekKey)
+        end
+        archiveByWeek[weekKey][#archiveByWeek[weekKey] + 1] = record
     end
+
+    currentWeekNo = #archiveWeeks
 end
 
 function ReportScreen:hide()
 end
 
 function ReportScreen:update()
-    gfx.drawText("Press A to start working", 20, 50)
+    gfx.clear()
+    gfx.drawText(archiveWeeks[currentWeekNo], 20, 50)
+end
+
+function playdate.leftButtonDown()
+    currentWeekNo = currentWeekNo - 1
+    if currentWeekNo < 1 then
+        currentWeekNo = 1
+    end
+end
+
+function playdate.rightButtonDown()
+    currentWeekNo = currentWeekNo + 1
+    if currentWeekNo > #archiveWeeks then
+        currentWeekNo = #archiveWeeks
+    end
 end
