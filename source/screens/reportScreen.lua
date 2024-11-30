@@ -7,6 +7,7 @@ local archiveWeeks = {}
 local currentWeekNo = 1
 
 local daysInMonth<const> = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+local daysOfWeek<const> = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}
 
 local function isLeapYear(year)
     return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)
@@ -77,6 +78,31 @@ local function getWeekRange(year, month, day)
     }
 end
 
+function getDayOfWeek(dateString)
+    -- Parse the input date string
+    local year, month, day = dateString:match("(%d+)-(%d+)-(%d+)")
+    year = tonumber(year)
+    month = tonumber(month)
+    day = tonumber(day)
+
+    -- Adjust months and years for Zeller's Congruence
+    if month < 3 then
+        month = month + 12
+        year = year - 1
+    end
+
+    -- Zeller's Congruence formula
+    local k = year % 100
+    local j = math.floor(year / 100)
+    local h = (day + math.floor((13 * (month + 1)) / 5) + k + math.floor(k / 4) + math.floor(j / 4) - 2 * j) % 7
+
+    -- Day of week mapping (0 = Saturday, ..., 6 = Friday)
+    -- local daysOfWeek = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"}
+    -- return daysOfWeek[(h + 1)] -- Adjust for Lua's 1-based indexing
+
+    return (h + 1) -- Adjust for Lua's 1-based indexing
+end
+
 function ReportScreen:show()
     archiveData = Storage.load("archiveData") or {}
 
@@ -92,11 +118,13 @@ function ReportScreen:show()
         local weekRange = getWeekRange(tonumber(year), tonumber(month), tonumber(day))
         local weekKey = string.format("%02d.%02d - %02d.%02d", weekRange.start.day, weekRange.start.month,
             weekRange.endDate.day, weekRange.endDate.month)
+        local dayOfWeek = getDayOfWeek(record.date)
         if archiveByWeek[weekKey] == nil then
             archiveByWeek[weekKey] = {}
             table.insert(archiveWeeks, weekKey)
         end
-        archiveByWeek[weekKey][#archiveByWeek[weekKey] + 1] = record
+        record.elapsed = (record.work or 0) + (record.meeting or 0) + (record.gaming or 0) + (record.creativity or 0)
+        archiveByWeek[weekKey][dayOfWeek] = record
     end
 
     currentWeekNo = #archiveWeeks
@@ -108,6 +136,13 @@ end
 function ReportScreen:update()
     gfx.clear()
     gfx.drawText(archiveWeeks[currentWeekNo], 20, 50)
+    for day = 1, 7 do
+        local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
+        gfx.drawText(daysOfWeek[day], 20, 50 + day * 20)
+        if record then
+            gfx.drawText(record.elapsed, 100, 50 + day * 20)
+        end
+    end
 end
 
 function playdate.leftButtonDown()
