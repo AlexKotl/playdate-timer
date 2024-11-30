@@ -144,13 +144,13 @@ function ReportScreen:update()
 
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
-        local x = 30 + (day - 1) * 64
+        local x = 30 + (day - 1) * 50
         gfx.drawText(daysOfWeek[day], x, 210)
+        local barHeight = 3
         if record then
-            local barHeight = record.elapsed * pixelRate
-            gfx.fillRect(x + 5, 190 - barHeight, 10, barHeight)
-            print(record.elapsed * pixelRate)
+            barHeight = record.elapsed * pixelRate
         end
+        gfx.fillRect(x + 5, 190 - barHeight, 10, barHeight)
     end
 end
 
