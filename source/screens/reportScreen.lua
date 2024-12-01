@@ -146,14 +146,14 @@ function ReportScreen:update()
     end
 end
 
-function playdate.leftButtonDown()
+function ReportScreen.leftButtonDown()
     currentWeekNo = currentWeekNo - 1
     if currentWeekNo < 1 then
         currentWeekNo = 1
     end
 end
 
-function playdate.rightButtonDown()
+function ReportScreen.rightButtonDown()
     currentWeekNo = currentWeekNo + 1
     if currentWeekNo > #archiveWeeks then
         currentWeekNo = #archiveWeeks
