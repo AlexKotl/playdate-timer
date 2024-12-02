@@ -69,17 +69,14 @@ local function drawProgressbar()
         if barWidth < 3 then
             barWidth = 3
         end
-        gfx.setColor(gfx.kColorBlack)
-        if record.type == 'meeting' then
-            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeDiagonalLine)
-        elseif record.type == 'gaming' then
-            gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
-        elseif record.type == 'creativity' then
-            gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
-        else
-            gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
+        local activity = {}
+        for i, act in ipairs(Constants.activities) do
+            if act.name == record.type then
+                activity = act
+                break
+            end
         end
-
+        gfx.setDitherPattern(activity['ditherValue'], activity['ditherPattern'])
         gfx.fillRect(barX, 240 - 20, barWidth, 20)
     end
     gfx.setLineWidth(3)
@@ -126,8 +123,8 @@ end
 
 function TimerScreen.rightButtonDown()
     currentActivityNo = currentActivityNo + 1
-    if currentActivityNo > #activities then
-        currentActivityNo = #activities
+    if currentActivityNo > #Constants.activities then
+        currentActivityNo = #Constants.activities
     end
 end
 

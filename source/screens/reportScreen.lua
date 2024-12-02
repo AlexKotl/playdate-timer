@@ -139,7 +139,7 @@ function ReportScreen:update()
     -- draw grid
     gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
     for i = 0, math.floor(maxTime / 3600) do
-        gfx.drawLine(20, 190 - i * 3600 * pixelRate, 370, 190 - i * 3600 * pixelRate, 1)
+        gfx.drawLine(20, 190 - i * 3600 * pixelRate, 370, 190 - i * 3600 * pixelRate, 2)
     end
 
     -- draw day summary
@@ -153,6 +153,7 @@ function ReportScreen:update()
         gfx.drawText(timeStr, 150 + i * 50, 50)
     end
 
+    -- chart by days
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
         local x = 30 + (day - 1) * 50
@@ -164,10 +165,16 @@ function ReportScreen:update()
 
         local barHeight = 3
         if record then
-            barHeight = record.elapsed * pixelRate
+            local offset = 0
+            for i, activity in ipairs(Constants.activities) do
+                local time = record[activity.name] or 0
+                barHeight = (record[activity.name] or 0) * pixelRate
+
+                gfx.setDitherPattern(activity.ditherValue, activity.ditherPattern)
+                gfx.fillRect(x + 2, 190 - offset - barHeight, 20, barHeight)
+                offset = offset + barHeight
+            end
         end
-        gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
-        gfx.fillRect(x + 2, 190 - barHeight, 20, barHeight)
     end
 end
 
