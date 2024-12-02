@@ -5,6 +5,7 @@ local archiveData = {}
 local archiveByWeek = {}
 local archiveWeeks = {}
 local currentWeekNo = 1
+local currentDayNo = 1
 local daysInMonth<const> = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 local daysOfWeek<const> = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
 
@@ -141,30 +142,59 @@ function ReportScreen:update()
         gfx.drawLine(20, 190 - i * 3600 * pixelRate, 370, 190 - i * 3600 * pixelRate, 1)
     end
 
-    gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
+    -- draw day summary
+    local daySummary = archiveByWeek[archiveWeeks[currentWeekNo]][currentDayNo]
+    for i, activity in ipairs(Constants.activities) do
+        local timeStr = '-'
+        if daySummary and daySummary[activity.name] then
+            timeStr = Utils.secondsToTime(daySummary[activity.name], true)
+        end
+        Constants.activities[i].icon:drawScaled(150 + i * 50, 10, 0.5)
+        gfx.drawText(timeStr, 150 + i * 50, 50)
+    end
+
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
         local x = 30 + (day - 1) * 50
         gfx.drawText(daysOfWeek[day], x, 210)
+        if day == currentDayNo then
+            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeDiagonalLine)
+            gfx.drawRect(x - 8, 200, 45, 35, 3)
+        end
+
         local barHeight = 3
         if record then
             barHeight = record.elapsed * pixelRate
         end
+        gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
         gfx.fillRect(x + 2, 190 - barHeight, 20, barHeight)
-
     end
 end
 
-function ReportScreen.leftButtonDown()
+function ReportScreen.downButtonDown()
     currentWeekNo = currentWeekNo - 1
     if currentWeekNo < 1 then
         currentWeekNo = 1
     end
 end
 
-function ReportScreen.rightButtonDown()
+function ReportScreen.upButtonDown()
     currentWeekNo = currentWeekNo + 1
     if currentWeekNo > #archiveWeeks then
         currentWeekNo = #archiveWeeks
+    end
+end
+
+function ReportScreen.leftButtonDown()
+    currentDayNo = currentDayNo - 1
+    if currentDayNo < 1 then
+        currentDayNo = 7
+    end
+end
+
+function ReportScreen.rightButtonDown()
+    currentDayNo = currentDayNo + 1
+    if currentDayNo > 7 then
+        currentDayNo = 1
     end
 end

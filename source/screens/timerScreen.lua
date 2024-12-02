@@ -13,20 +13,6 @@ local isRunning = false
 local startTime = nil
 local elapsedTime = 0
 local recordedTimes = {}
--- local recordedTimes = {}
-local activities<const> = {{
-    ["name"] = "work",
-    ["icon"] = gfx.image.new("assets/activities/work")
-}, {
-    ["name"] = "meeting",
-    ["icon"] = gfx.image.new("assets/activities/meeting")
-}, {
-    ["name"] = "gaming",
-    ["icon"] = gfx.image.new("assets/activities/gaming")
-}, {
-    ["name"] = "creativity",
-    ["icon"] = gfx.image.new("assets/activities/creativity")
-}}
 local currentActivityNo = 1
 
 local screenImage = gfx.image.new("assets/screen")
@@ -55,7 +41,7 @@ local function toggleStopwatch()
         elapsedTime = endTime - startTime
 
         table.insert(recordedTimes, {
-            ["type"] = activities[currentActivityNo].name,
+            ["type"] = Constants.activities[currentActivityNo].name,
             ["date"] = Utils.currentDate(),
             ["elapsed"] = elapsedTime,
             ["start"] = startTime,
@@ -115,15 +101,15 @@ local function updateScreen()
 
     if isRunning then
         local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
-        gfx.drawText(string.upper(activities[currentActivityNo].name), 20, 50)
+        gfx.drawText(string.upper(Constants.activities[currentActivityNo].name), 20, 50)
         gfx.setFont(fontClock)
         gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
     else
         gfx.drawText("Press A to start working", 20, 50)
         gfx.drawText("Press B to select project", 40, 185)
         gfx.setDitherPattern(0.3, gfx.image.kDitherTypeDiagonalLine)
-        for i, activity in ipairs(activities) do
-            activities[i].icon:draw(36 + ((i - 1) * (64 + 25)), 110)
+        for i, activity in ipairs(Constants.activities) do
+            Constants.activities[i].icon:draw(36 + ((i - 1) * (64 + 25)), 110)
             if (i == currentActivityNo) then
                 gfx.drawRect(36 + ((i - 1) * (64 + 25)) - 5, 110 - 5, 74, 74)
             end

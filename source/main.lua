@@ -3,6 +3,7 @@ import "screens/reportScreen"
 import "screens/timerScreen"
 Utils = import "utils"
 Storage = import "storage"
+Constants = import "constants"
 
 playdate.setAutoLockDisabled(true)
 
@@ -13,7 +14,7 @@ local reportScreen = ReportScreen:new()
 screenManager:addScreen("report", ReportScreen)
 screenManager:addScreen("timer", TimerScreen)
 
-screenManager:showScreen("timer")
+screenManager:showScreen("report")
 
 function playdate.update()
     if screenManager.activeScreen and screenManager.activeScreen.update then
