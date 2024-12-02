@@ -135,6 +135,13 @@ function ReportScreen:update()
     local pixelRate = 100 / maxTime
     gfx.drawText("Max time: " .. Utils.secondsToTime(maxTime, true), 20, 50)
 
+    -- draw grid
+    gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
+    for i = 0, math.floor(maxTime / 3600) do
+        gfx.drawLine(20, 190 - i * 3600 * pixelRate, 370, 190 - i * 3600 * pixelRate, 1)
+    end
+
+    gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
         local x = 30 + (day - 1) * 50

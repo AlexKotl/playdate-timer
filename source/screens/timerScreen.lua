@@ -89,7 +89,7 @@ local function drawProgressbar()
         elseif record.type == 'gaming' then
             gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
         elseif record.type == 'creativity' then
-            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeHorizontalLine)
+            gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
         else
             gfx.setDitherPattern(0, gfx.image.kDitherTypeScreen)
         end
