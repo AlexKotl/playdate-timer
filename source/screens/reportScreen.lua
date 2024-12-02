@@ -1,5 +1,8 @@
 ReportScreen = Screen:new()
+import "CoreLibs/timer"
+
 local gfx<const> = playdate.graphics
+local animationTimer = nil
 
 local archiveData = {}
 local archiveByWeek = {}
@@ -78,7 +81,7 @@ local function getWeekRange(year, month, day)
     }
 end
 
-function getDayOfWeek(dateString)
+local function getDayOfWeek(dateString)
     -- Parse the input date string
     local year, month, day = dateString:match("(%d+)-(%d+)-(%d+)")
     year = tonumber(year)
@@ -97,6 +100,10 @@ function getDayOfWeek(dateString)
     local h = (day + math.floor((13 * (month + 1)) / 5) + k + math.floor(k / 4) + math.floor(j / 4) - 2 * j) % 7
     local adjustedDay = (h + 6) % 7 -- Convert to 1 = Monday, 7 = Sunday
     return adjustedDay
+end
+
+local function resetAnimation()
+    animationTimer = playdate.timer.new(500, 0, 1)
 end
 
 function ReportScreen:show()
@@ -121,6 +128,7 @@ function ReportScreen:show()
     end
 
     currentWeekNo = #archiveWeeks
+    resetAnimation()
 end
 
 function ReportScreen:hide()
@@ -134,7 +142,6 @@ function ReportScreen:update()
         maxTime = math.max(maxTime, record.elapsed)
     end
     local pixelRate = 100 / maxTime
-    gfx.drawText("Max time: " .. Utils.secondsToTime(maxTime, true), 20, 50)
 
     -- draw grid
     gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
@@ -168,7 +175,7 @@ function ReportScreen:update()
             local offset = 0
             for i, activity in ipairs(Constants.activities) do
                 local time = record[activity.name] or 0
-                barHeight = (record[activity.name] or 0) * pixelRate
+                barHeight = (record[activity.name] or 0) * pixelRate * animationTimer.value
 
                 gfx.setDitherPattern(activity.ditherValue, activity.ditherPattern)
                 gfx.fillRect(x + 2, 190 - offset - barHeight, 20, barHeight)
@@ -176,17 +183,23 @@ function ReportScreen:update()
             end
         end
     end
+
+    playdate.timer.updateTimers()
 end
 
 function ReportScreen.downButtonDown()
+    currentDayNo = 1
     currentWeekNo = currentWeekNo - 1
+    resetAnimation()
     if currentWeekNo < 1 then
         currentWeekNo = 1
     end
 end
 
 function ReportScreen.upButtonDown()
+    currentDayNo = 1
     currentWeekNo = currentWeekNo + 1
+    resetAnimation()
     if currentWeekNo > #archiveWeeks then
         currentWeekNo = #archiveWeeks
     end
