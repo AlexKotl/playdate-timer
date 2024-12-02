@@ -94,12 +94,14 @@ function getDayOfWeek(dateString)
     local k = year % 100
     local j = math.floor(year / 100)
     local h = (day + math.floor((13 * (month + 1)) / 5) + k + math.floor(k / 4) + math.floor(j / 4) - 2 * j) % 7
-    local adjustedDay = (h + 6) % 7 + 1 -- Convert to 1 = Monday, 7 = Sunday
+    local adjustedDay = (h + 6) % 7 -- Convert to 1 = Monday, 7 = Sunday
     return adjustedDay
 end
 
 function ReportScreen:show()
     archiveData = Storage.load("archiveData") or {}
+    -- add current day stats
+    table.insert(archiveData, Storage.recordedTimesToArchiveRecord(Storage.load("recordedTimes") or {}))
 
     for i, record in ipairs(archiveData) do
         -- split date into year, month, day
@@ -114,7 +116,7 @@ function ReportScreen:show()
         end
         record.elapsed = (record.work or 0) + (record.meeting or 0) + (record.gaming or 0) + (record.creativity or 0)
         archiveByWeek[weekKey][dayOfWeek] = record
-        print(weekKey, dayOfWeek, record.elapsed)
+        print(weekKey, dayOfWeek, record.date, record.elapsed)
     end
 
     currentWeekNo = #archiveWeeks
