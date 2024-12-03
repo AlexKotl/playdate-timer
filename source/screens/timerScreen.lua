@@ -5,8 +5,9 @@ import "CoreLibs/timer"
 local Rabbit = import "rabbit"
 
 local gfx<const> = playdate.graphics
-local fontDefault<const> = gfx.getSystemFont()
-local fontClock<const> = gfx.font.new("fonts/Clock")
+local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-14")
+local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
+local fontClock<const> = gfx.font.new("fonts/Clock/Clock")
 playdate.setAutoLockDisabled(true)
 
 local isRunning = false
@@ -76,7 +77,7 @@ local function drawProgressbar()
                 break
             end
         end
-        gfx.setDitherPattern(activity['ditherValue'], activity['ditherPattern'])
+        gfx.setDitherPattern(activity['ditherValue'] or 0, activity['ditherPattern'] or gfx.image.kDitherTypeScreen)
         gfx.fillRect(barX, 240 - 20, barWidth, 20)
     end
     gfx.setLineWidth(3)
@@ -85,7 +86,6 @@ end
 
 local function updateScreen()
     gfx.clear()
-    gfx.setFont(fontDefault)
     gfx.sprite.update()
     screenImage:draw(0, 0)
     playdate.timer.updateTimers()
@@ -94,6 +94,7 @@ local function updateScreen()
     for i, record in ipairs(recordedTimes) do
         totalTime = totalTime + record.elapsed
     end
+    gfx.setFont(fontBigger)
     gfx.drawText("Today record: " .. Utils.secondsToTime(totalTime, true), 20, 20)
 
     if isRunning then
@@ -102,8 +103,7 @@ local function updateScreen()
         gfx.setFont(fontClock)
         gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
     else
-        gfx.drawText("Press A to start working", 20, 50)
-        gfx.drawText("Press B to select project", 40, 185)
+        gfx.drawText("Press A to start working", 30, 189)
         gfx.setDitherPattern(0.3, gfx.image.kDitherTypeDiagonalLine)
         for i, activity in ipairs(Constants.activities) do
             Constants.activities[i].icon:draw(36 + ((i - 1) * (64 + 25)), 110)

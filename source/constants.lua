@@ -13,8 +13,8 @@ Constants.activities = {{
     ["ditherPattern"] = gfx.image.kDitherTypeDiagonalLine,
     ["ditherValue"] = 0.5
 }, {
-    ["name"] = "gaming",
-    ["icon"] = gfx.image.new("assets/activities/gaming"),
+    ["name"] = "learning",
+    ["icon"] = gfx.image.new("assets/activities/learning"),
     ["ditherPattern"] = gfx.image.kDitherTypeScreen,
     ["ditherValue"] = 0.8
 }, {

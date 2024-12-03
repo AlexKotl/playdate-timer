@@ -14,7 +14,7 @@ local reportScreen = ReportScreen:new()
 screenManager:addScreen("report", ReportScreen)
 screenManager:addScreen("timer", TimerScreen)
 
-screenManager:showScreen("report")
+screenManager:showScreen("timer")
 
 function playdate.update()
     if screenManager.activeScreen and screenManager.activeScreen.update then

@@ -190,18 +190,20 @@ end
 function ReportScreen.downButtonDown()
     currentDayNo = 1
     currentWeekNo = currentWeekNo - 1
-    resetAnimation()
     if currentWeekNo < 1 then
         currentWeekNo = 1
+    else
+        resetAnimation()
     end
 end
 
 function ReportScreen.upButtonDown()
     currentDayNo = 1
     currentWeekNo = currentWeekNo + 1
-    resetAnimation()
     if currentWeekNo > #archiveWeeks then
         currentWeekNo = #archiveWeeks
+    else
+        resetAnimation()
     end
 end
 
