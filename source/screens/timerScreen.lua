@@ -85,6 +85,7 @@ local function drawProgressbar()
 end
 
 local function updateScreen()
+
     gfx.clear()
     gfx.sprite.update()
     screenImage:draw(0, 0)

@@ -3,6 +3,8 @@ Rabbit.__index = Rabbit
 
 local gfx<const> = playdate.graphics
 local animation = 'idle'
+local animationRepeats = 10
+local animationTimer = nil
 
 function Rabbit:init()
     local spriteSheet = gfx.imagetable.new("assets/rabbit")
@@ -10,15 +12,18 @@ function Rabbit:init()
     local self = setmetatable({}, Rabbit)
     self.animation = "idle"
 
-    animatedSprite:moveTo(350, 45)
+    animatedSprite:moveTo(265, 40)
     animatedSprite:add()
 
     local frame = 5
-    -- local frameCount = spriteSheet:getLength()
     local animationSpeed = 120
 
-    local animationTimer = playdate.timer.new(animationSpeed, function()
+    animationTimer = playdate.timer.new(animationSpeed, function()
         animatedSprite:setImage(spriteSheet:getImage(frame))
+        animationRepeats = animationRepeats - 1
+        if animationRepeats == 0 then
+            animationTimer.repeats = false
+        end
 
         frame = frame + 1
         if self.animation == "working" and frame > 4 then
@@ -27,12 +32,14 @@ function Rabbit:init()
             frame = 5
         end
     end)
-    -- TODO: temp disable animation
-    -- animationTimer.repeats = true
+    animationTimer.repeats = true
     return self
 end
 
 function Rabbit:setAnimation(newAnimation)
+    print('Setting animation to', newAnimation)
+    animationRepeats = 50
+    animationTimer.repeats = true
     self.animation = newAnimation
 end
 
