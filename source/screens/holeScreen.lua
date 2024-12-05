@@ -37,7 +37,7 @@ local holeItems<const> = {{
 -- TODO: format indexes from keys on init
 local currentItems = {1, 2, 3, 4, 5}
 local currentBalance = 0
-local isMenuVisible = true
+local isMenuVisible = false
 local selectedMenuItem = 1
 
 local function drawMenu()
@@ -133,6 +133,21 @@ function HoleScreen.rightButtonDown()
 
 end
 
+function HoleScreen.AButtonDown()
+    if isMenuVisible then
+        if currentBalance >= holeItems[selectedMenuItem].price then
+            -- TODO: buy item
+        end
+        isMenuVisible = false
+    else
+        isMenuVisible = true
+    end
+end
+
 function HoleScreen.BButtonDown()
-    ScreenManager.instance:showScreen("timer")
+    if isMenuVisible then
+        isMenuVisible = false
+    else
+        ScreenManager.instance:showScreen("timer")
+    end
 end
