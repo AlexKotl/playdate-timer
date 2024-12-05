@@ -122,6 +122,10 @@ function TimerScreen.AButtonDown()
     toggleStopwatch()
 end
 
+function TimerScreen.BButtonDown()
+    ScreenManager.instance:showScreen("report")
+end
+
 function TimerScreen.rightButtonDown()
     currentActivityNo = currentActivityNo + 1
     if currentActivityNo > #Constants.activities then
@@ -142,6 +146,7 @@ function TimerScreen:show()
 end
 
 function TimerScreen:hide()
+    rabbit:stopAnimation()
 end
 
 function TimerScreen:update()

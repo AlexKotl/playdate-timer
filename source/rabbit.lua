@@ -45,4 +45,8 @@ function Rabbit:setAnimation(newAnimation)
     self.animationTimer.repeats = true
 end
 
+function Rabbit:stopAnimation()
+    self.animationTimer:remove()
+end
+
 return Rabbit

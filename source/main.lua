@@ -8,7 +8,7 @@ Constants = import "constants"
 
 playdate.setAutoLockDisabled(true)
 
-local screenManager = ScreenManager:new()
+local screenManager = ScreenManager:new().instance
 local timerScreen = TimerScreen:new()
 local reportScreen = ReportScreen:new()
 local holeScreen = HoleScreen:new()
@@ -30,6 +30,11 @@ function playdate.AButtonDown()
         screenManager.activeScreen:AButtonDown()
     end
 end
+function playdate.BButtonDown()
+    if screenManager.activeScreen and screenManager.activeScreen.BButtonDown then
+        screenManager.activeScreen:BButtonDown()
+    end
+end
 function playdate.leftButtonDown()
     if screenManager.activeScreen and screenManager.activeScreen.leftButtonDown then
         screenManager.activeScreen:leftButtonDown()
@@ -48,15 +53,5 @@ end
 function playdate.downButtonDown()
     if screenManager.activeScreen and screenManager.activeScreen.downButtonDown then
         screenManager.activeScreen:downButtonDown()
-    end
-end
-
-function playdate.BButtonDown()
-    if screenManager.activeScreenName == 'timer' then
-        screenManager:showScreen("report")
-    elseif screenManager.activeScreenName == 'report' then
-        screenManager:showScreen("hole")
-    else
-        screenManager:showScreen("timer")
     end
 end

@@ -33,18 +33,6 @@ local holeItems<const> = {{
     description = "Windows for sun",
     price = 0,
     image = gfx.image.new("assets/hole/windows1")
-}, {
-    title = "Windows New",
-    category = "windows",
-    description = "Windows for sun",
-    price = 300,
-    image = gfx.image.new("assets/hole/windows1")
-}, {
-    title = "Windows Super new",
-    category = "windows",
-    description = "Windows for sun",
-    price = 100,
-    image = gfx.image.new("assets/hole/windows1")
 }}
 -- TODO: format indexes from keys on init
 local currentItems = {1, 2, 3, 4, 5}
@@ -53,20 +41,21 @@ local isMenuVisible = true
 local selectedMenuItem = 1
 
 local function drawMenu()
-    local itemHeight = 30
+    local itemHeight = 32
     local itemsInMenu = 5
     local menuWidth = 220
 
+    -- menu background
     gfx.setColor(1)
     gfx.fillRect(10, 10, menuWidth, itemHeight * itemsInMenu)
     gfx.setColor(0)
-    gfx.drawRect(10, 10, menuWidth, itemHeight * itemsInMenu)
+    gfx.drawRect(10, 10, menuWidth, itemHeight * itemsInMenu, 2)
 
     -- info text
     gfx.setColor(1)
     gfx.fillRect(menuWidth + 10, 10, 140, 100)
     gfx.setColor(0)
-    gfx.drawRect(menuWidth + 10, 10, 140, 100)
+    gfx.drawRect(menuWidth + 10, 10, 140, 100, 2)
     gfx.setFont(fontDefault)
     gfx.drawTextInRect(holeItems[selectedMenuItem].description, menuWidth + 20, 20, 125, 90)
 
@@ -137,8 +126,13 @@ function HoleScreen.upButtonDown()
 end
 
 function HoleScreen.leftButtonDown()
+
 end
 
 function HoleScreen.rightButtonDown()
 
+end
+
+function HoleScreen.BButtonDown()
+    ScreenManager.instance:showScreen("timer")
 end
