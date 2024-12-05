@@ -31,7 +31,7 @@ function Rabbit:setAnimation(newAnimation)
     self.animationTimer = playdate.timer.new(animationSpeed, function()
         self.animatedSprite:setImage(self.spriteSheet:getImage(frame))
         animationRepeats = animationRepeats - 1
-        if animationRepeats == 0 then
+        if animationRepeats < 0 then
             self.animationTimer:remove()
         end
 
