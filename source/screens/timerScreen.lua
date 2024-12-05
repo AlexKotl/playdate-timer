@@ -138,6 +138,7 @@ end
 
 function TimerScreen:show()
     recordedTimes = Storage.load("recordedTimes") or {}
+    rabbit:setAnimation("idle")
 end
 
 function TimerScreen:hide()

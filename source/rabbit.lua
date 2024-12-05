@@ -3,26 +3,36 @@ Rabbit.__index = Rabbit
 
 local gfx<const> = playdate.graphics
 local animation = 'idle'
-local animationRepeats = 10
+
+local animationRepeats = 0
 local animationTimer = nil
+local animatedSprite = nil
+local spriteSheet = nil
 
 function Rabbit:init()
-    local spriteSheet = gfx.imagetable.new("assets/rabbit")
-    local animatedSprite = gfx.sprite.new()
+    self.spriteSheet = gfx.imagetable.new("assets/rabbit")
     local self = setmetatable({}, Rabbit)
+    self.animatedSprite = gfx.sprite.new()
     self.animation = "idle"
 
-    animatedSprite:moveTo(265, 40)
-    animatedSprite:add()
+    self.animatedSprite:moveTo(265, 40)
+    self.animatedSprite:add()
 
-    local frame = 5
+    return self
+end
+
+function Rabbit:setAnimation(newAnimation)
+    self.animation = newAnimation
+
     local animationSpeed = 120
-
-    animationTimer = playdate.timer.new(animationSpeed, function()
-        animatedSprite:setImage(spriteSheet:getImage(frame))
+    local frame = 5
+    -- How many frames to show begore sleep
+    animationRepeats = 100
+    self.animationTimer = playdate.timer.new(animationSpeed, function()
+        self.animatedSprite:setImage(self.spriteSheet:getImage(frame))
         animationRepeats = animationRepeats - 1
         if animationRepeats == 0 then
-            animationTimer.repeats = false
+            self.animationTimer:remove()
         end
 
         frame = frame + 1
@@ -32,15 +42,7 @@ function Rabbit:init()
             frame = 5
         end
     end)
-    animationTimer.repeats = true
-    return self
-end
-
-function Rabbit:setAnimation(newAnimation)
-    print('Setting animation to', newAnimation)
-    animationRepeats = 50
-    animationTimer.repeats = true
-    self.animation = newAnimation
+    self.animationTimer.repeats = true
 end
 
 return Rabbit
