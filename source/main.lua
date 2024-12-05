@@ -17,7 +17,7 @@ screenManager:addScreen("timer", TimerScreen)
 screenManager:addScreen("report", ReportScreen)
 screenManager:addScreen("hole", HoleScreen)
 
-screenManager:showScreen("hole")
+screenManager:showScreen("timer")
 
 function playdate.update()
     if screenManager.activeScreen and screenManager.activeScreen.update then

@@ -3,39 +3,42 @@ HoleScreen = Screen:new()
 local gfx<const> = playdate.graphics
 local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-14")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
-local holeItems<const> = {{
+local holeItems = {{
     title = "Basic hole",
     category = "hole",
     description = "A hole in the ground for rabbits.",
     price = 0,
-    image = gfx.image.new("assets/hole/hole1")
+    image = gfx.image.new("assets/hole/hole1"),
+    applied = true
 }, {
     title = "Basic couch",
     category = "couch",
     description = "Just simple smelly old couch.",
     price = 0,
-    image = gfx.image.new("assets/hole/couch1")
+    image = gfx.image.new("assets/hole/couch1"),
+    applied = false
 }, {
     title = "Small carpet",
     category = "carpet",
     description = "Carpet. It's small. It smells. It's carpet.",
     price = 20,
-    image = gfx.image.new("assets/hole/carpet1")
+    image = gfx.image.new("assets/hole/carpet1"),
+    applied = false
 }, {
     title = "Small desk",
     category = "desk",
     description = "Almost fits for work.",
     price = 100,
-    image = gfx.image.new("assets/hole/desk1")
+    image = gfx.image.new("assets/hole/desk1"),
+    applied = false
 }, {
     title = "Windows",
     category = "windows",
     description = "Windows for sun",
     price = 0,
-    image = gfx.image.new("assets/hole/windows1")
+    image = gfx.image.new("assets/hole/windows1"),
+    applied = true
 }}
--- TODO: format indexes from keys on init
-local currentItems = {1, 2, 3, 4, 5}
 local currentBalance = 0
 local isMenuVisible = false
 local selectedMenuItem = 1
@@ -77,13 +80,12 @@ local function drawMenu()
                 gfx.setImageDrawMode(gfx.kDrawModeInverted)
 
             end
-            gfx.drawText(item.title, 20, 20 + ((currentPosition - 1) * itemHeight))
+            gfx.drawText((item.applied and "+ " or "") .. item.title, 20, 20 + ((currentPosition - 1) * itemHeight))
             gfx.drawText("$" .. item.price, 170, 20 + ((currentPosition - 1) * itemHeight))
             gfx.setImageDrawMode(gfx.kDrawModeCopy)
             currentPosition = currentPosition + 1
         end
     end
-
 end
 
 function HoleScreen:show()
@@ -97,9 +99,8 @@ end
 function HoleScreen:update()
     gfx.clear()
 
-    for i, item in ipairs(currentItems) do
-        local item = holeItems[item]
-        if item.image then
+    for i, item in ipairs(holeItems) do
+        if item.applied and item.image then
             item.image:draw(1, 1)
         end
     end
@@ -135,9 +136,10 @@ end
 
 function HoleScreen.AButtonDown()
     if isMenuVisible then
-        if currentBalance >= holeItems[selectedMenuItem].price then
-            -- TODO: buy item
-        end
+        -- buy item
+        local item = holeItems[selectedMenuItem]
+        holeItems[selectedMenuItem].applied = not item.applied
+
         isMenuVisible = false
     else
         isMenuVisible = true
