@@ -123,6 +123,9 @@ function TimerScreen.AButtonDown()
 end
 
 function TimerScreen.BButtonDown()
+    if isRunning then
+        toggleStopwatch()
+    end
     ScreenManager.instance:showScreen("report")
 end
 
