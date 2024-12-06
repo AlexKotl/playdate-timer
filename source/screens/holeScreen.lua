@@ -4,40 +4,54 @@ local gfx<const> = playdate.graphics
 local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-14")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
 local holeItems = {{
+    key = "hole1",
     title = "Basic hole",
     category = "hole",
     description = "A hole in the ground for rabbits.",
     price = 0,
-    image = gfx.image.new("assets/hole/hole1"),
-    applied = true
+    image = gfx.image.new("assets/hole/hole1")
 }, {
+    key = "couch1",
     title = "Basic couch",
     category = "couch",
     description = "Just simple smelly old couch.",
     price = 0,
-    image = gfx.image.new("assets/hole/couch1"),
-    applied = false
+    image = gfx.image.new("assets/hole/couch1")
 }, {
+    key = "carpet1",
     title = "Small carpet",
     category = "carpet",
     description = "Carpet. It's small. It smells. It's carpet.",
     price = 20,
-    image = gfx.image.new("assets/hole/carpet1"),
-    applied = false
+    image = gfx.image.new("assets/hole/carpet1")
 }, {
+    key = "desk1",
     title = "Small desk",
     category = "desk",
     description = "Almost fits for work.",
     price = 100,
-    image = gfx.image.new("assets/hole/desk1"),
-    applied = false
+    image = gfx.image.new("assets/hole/desk1")
 }, {
+    key = "windows1",
     title = "Windows",
     category = "windows",
     description = "Windows for sun",
     price = 0,
-    image = gfx.image.new("assets/hole/windows1"),
-    applied = true
+    image = gfx.image.new("assets/hole/windows1")
+}, {
+    key = "windows2",
+    title = "Windows without cracks",
+    category = "windows",
+    description = "",
+    price = 0,
+    image = gfx.image.new("assets/hole/windows2")
+}, {
+    key = "windows3",
+    title = "Big windows",
+    category = "windows",
+    description = "",
+    price = 0,
+    image = gfx.image.new("assets/hole/windows3")
 }}
 local currentBalance = 0
 local isMenuVisible = false
@@ -88,9 +102,36 @@ local function drawMenu()
     end
 end
 
+local function saveCurrentState()
+    local data = {
+        balance = currentBalance,
+        items = {}
+    }
+    for i, item in ipairs(holeItems) do
+        if item.purchased then
+            table.insert(data.items, {
+                key = item.key,
+                purchased = item.purchased,
+                applied = item.applied
+            })
+        end
+    end
+    Storage.save(data, "hole")
+end
+
 function HoleScreen:show()
     currentBalance = 200
     gfx.setFont(fontBigger)
+    local data = Storage.load("hole") or {}
+    currentBalance = data.balance or 300
+    for i, item in ipairs(data.items or {}) do
+        for j, holeItem in ipairs(holeItems) do
+            if holeItem.key == item.key then
+                holeItem.purchased = item.purchased
+                holeItem.applied = item.applied
+            end
+        end
+    end
 end
 
 function HoleScreen:hide()
@@ -139,6 +180,8 @@ function HoleScreen.AButtonDown()
         -- buy item
         local item = holeItems[selectedMenuItem]
         holeItems[selectedMenuItem].applied = not item.applied
+        holeItems[selectedMenuItem].purchased = true
+        saveCurrentState()
 
         isMenuVisible = false
     else
