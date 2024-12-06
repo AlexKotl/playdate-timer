@@ -25,11 +25,20 @@ local function checkDateAndSaveArchive()
         print("New day, resetting recorded times")
 
         local archiveData = Storage.load("archiveData") or {}
+        local totalTime = 0;
+        for i, record in ipairs(recordedTimes) do
+            totalTime = totalTime + record.elapsed
+        end
         table.insert(archiveData, Storage.recordedTimesToArchiveRecord(recordedTimes))
         Storage.save(archiveData, "archiveData")
 
         recordedTimes = {}
         Storage.save(recordedTimes, "recordedTimes")
+
+        -- adding balance
+        local holeData = Storage.load("hole") or {}
+        holeData.balance = (holeData.balance or 0) + math.ceil(totalTime / 3600 * 10)
+        Storage.save(holeData, "hole")
     end
 end
 
@@ -124,6 +133,13 @@ function TimerScreen.AButtonDown()
     toggleStopwatch()
 end
 
+function TimerScreen.BButtonDown()
+    if isRunning then
+        toggleStopwatch()
+    end
+    ScreenManager.instance:showScreen("report")
+end
+
 function TimerScreen.rightButtonDown()
     currentActivityNo = currentActivityNo + 1
     if currentActivityNo > #Constants.activities then
@@ -144,6 +160,7 @@ function TimerScreen:show()
 end
 
 function TimerScreen:hide()
+    rabbit:stopAnimation()
 end
 
 function TimerScreen:update()

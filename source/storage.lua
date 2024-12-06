@@ -1,10 +1,5 @@
 local Storage = {}
 
--- TODO: how to reuse from utils
-local function currentDate()
-    return playdate.getTime().year .. "-" .. playdate.getTime().month .. "-" .. playdate.getTime().day
-end
-
 function Storage.save(data, filename)
     local success, error = playdate.datastore.write(data, filename)
     if not success then

@@ -28,6 +28,10 @@ function Rabbit:setAnimation(newAnimation)
     local frame = 5
     -- How many frames to show begore sleep
     animationRepeats = 100
+
+    if self.animationTimer then
+        self.animationTimer:remove()
+    end
     self.animationTimer = playdate.timer.new(animationSpeed, function()
         self.animatedSprite:setImage(self.spriteSheet:getImage(frame))
         animationRepeats = animationRepeats - 1
@@ -43,6 +47,10 @@ function Rabbit:setAnimation(newAnimation)
         end
     end)
     self.animationTimer.repeats = true
+end
+
+function Rabbit:stopAnimation()
+    self.animationTimer:remove()
 end
 
 return Rabbit
