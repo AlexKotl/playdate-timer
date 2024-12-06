@@ -220,3 +220,7 @@ function ReportScreen.rightButtonDown()
         currentDayNo = 1
     end
 end
+
+function ReportScreen.BButtonDown()
+    ScreenManager.instance:showScreen("hole")
+end

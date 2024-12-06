@@ -26,6 +26,9 @@ function ScreenManager:showScreen(name)
     end
 end
 
+-- Singleton instance
+ScreenManager.instance = ScreenManager:new()
+
 Screen = {}
 Screen.__index = Screen
 
@@ -49,4 +52,8 @@ end
 
 function Screen:AButtonDown()
     -- Code to handle A button down
+end
+
+function Screen:BButtonDown()
+    -- Code to handle B button down
 end
