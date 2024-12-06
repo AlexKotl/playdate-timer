@@ -123,6 +123,22 @@ local function drawConfirmation()
     -- TODO: draw buttons
 end
 
+local function applyItem(index, show)
+    local item = holeItems[index]
+    if show then
+        holeItems[index].applied = true
+        for i, holeItem in ipairs(holeItems) do
+            if holeItem.category == item.category and holeItem.key ~= item.key then
+                holeItem.applied = false
+            end
+        end
+    else
+        if item.key ~= "hole1" and item.key ~= "windows1" then
+            holeItems[index].applied = false
+        end
+    end
+end
+
 local function saveCurrentState()
     local data = {
         balance = currentBalance,
@@ -159,14 +175,19 @@ end
 
 function HoleScreen:update()
     gfx.clear()
+    local holeValue = 0
 
     for i, item in ipairs(holeItems) do
         if item.applied and item.image then
             item.image:draw(1, 1)
         end
+        if item.purchased then
+            holeValue = holeValue + item.price
+        end
     end
 
-    gfx.drawText("You have: $" .. currentBalance, 100, 10)
+    gfx.drawText("You have: $" .. currentBalance, 80, 10)
+    gfx.drawText("Hole value: $" .. holeValue, 220, 10)
 
     if isMenuVisible then
         drawMenu()
@@ -201,8 +222,7 @@ end
 function HoleScreen.AButtonDown()
     if isConfirmationVisible then
         currentBalance = currentBalance - holeItems[selectedMenuItem].price
-        -- implement smart apply
-        holeItems[selectedMenuItem].applied = true
+        applyItem(selectedMenuItem, true)
         holeItems[selectedMenuItem].purchased = true
         saveCurrentState()
         isConfirmationVisible = false
@@ -210,9 +230,7 @@ function HoleScreen.AButtonDown()
     elseif isMenuVisible then
         local item = holeItems[selectedMenuItem]
         if item.purchased then
-            -- implement smart apply
-            print("apply", not item.applied)
-            holeItems[selectedMenuItem].applied = not item.applied
+            applyItem(selectedMenuItem, not item.applied)
             saveCurrentState()
             isMenuVisible = false
         else
