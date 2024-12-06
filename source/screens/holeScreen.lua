@@ -210,6 +210,7 @@ function HoleScreen:update()
 
     gfx.drawText("You have: $" .. currentBalance, 80, 10)
     gfx.drawText("Hole value: $" .. holeValue, 220, 10)
+    Button.draw(10, 10, "Upgrade hole", "a")
 
     if isMenuVisible then
         drawMenu()

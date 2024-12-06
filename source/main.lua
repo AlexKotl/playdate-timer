@@ -5,6 +5,7 @@ import "screens/holeScreen"
 Utils = import "utils"
 Storage = import "storage"
 Constants = import "constants"
+Button = import "components/button"
 
 playdate.setAutoLockDisabled(true)
 

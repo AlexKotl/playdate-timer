@@ -2,6 +2,7 @@ ReportScreen = Screen:new()
 import "CoreLibs/timer"
 
 local gfx<const> = playdate.graphics
+local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
 local animationTimer = nil
 
 local archiveData = {}
@@ -136,6 +137,7 @@ end
 
 function ReportScreen:update()
     gfx.clear()
+    gfx.setFont(fontDefault)
     gfx.drawText("Week: " .. archiveWeeks[currentWeekNo], 20, 20)
     local maxTime = 0
     for i, record in pairs(archiveByWeek[archiveWeeks[currentWeekNo]]) do
