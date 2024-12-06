@@ -36,25 +36,26 @@ local holeItems = {{
     title = "Windows",
     category = "windows",
     description = "Windows for sun",
-    price = 0,
+    price = 200,
     image = gfx.image.new("assets/hole/windows1")
 }, {
     key = "windows2",
     title = "Windows without cracks",
     category = "windows",
     description = "",
-    price = 0,
+    price = 500,
     image = gfx.image.new("assets/hole/windows2")
 }, {
     key = "windows3",
     title = "Big windows",
     category = "windows",
     description = "",
-    price = 0,
+    price = 1000,
     image = gfx.image.new("assets/hole/windows3")
 }}
 local currentBalance = 0
 local isMenuVisible = false
+local isConfirmationVisible = false
 local selectedMenuItem = 1
 
 local function drawMenu()
@@ -94,12 +95,32 @@ local function drawMenu()
                 gfx.setImageDrawMode(gfx.kDrawModeInverted)
 
             end
-            gfx.drawText((item.applied and "+ " or "") .. item.title, 20, 20 + ((currentPosition - 1) * itemHeight))
-            gfx.drawText("$" .. item.price, 170, 20 + ((currentPosition - 1) * itemHeight))
+            gfx.drawText(item.title, 20, 20 + ((currentPosition - 1) * itemHeight))
+            local statusText = "$" .. item.price
+            if item.applied then
+                statusText = "v"
+            elseif item.purchased then
+                statusText = ""
+            end
+
+            gfx.drawText(statusText, 170, 20 + ((currentPosition - 1) * itemHeight))
             gfx.setImageDrawMode(gfx.kDrawModeCopy)
             currentPosition = currentPosition + 1
         end
     end
+end
+
+local function drawConfirmation()
+    gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
+    gfx.fillRect(0, 0, 400, 240)
+    gfx.setColor(1)
+    gfx.fillRect(50, 50, 300, 100)
+    gfx.setColor(0)
+    gfx.drawRect(50, 50, 300, 100, 2)
+    gfx.setFont(fontBigger)
+    local item = holeItems[selectedMenuItem]
+    gfx.drawTextInRect("Are you sure you want to buy " .. item.title .. " for $" .. item.price .. "?", 70, 70, 260, 100)
+    -- TODO: draw buttons
 end
 
 local function saveCurrentState()
@@ -120,10 +141,9 @@ local function saveCurrentState()
 end
 
 function HoleScreen:show()
-    currentBalance = 200
     gfx.setFont(fontBigger)
     local data = Storage.load("hole") or {}
-    currentBalance = data.balance or 300
+    currentBalance = data.balance or 0
     for i, item in ipairs(data.items or {}) do
         for j, holeItem in ipairs(holeItems) do
             if holeItem.key == item.key then
@@ -151,6 +171,9 @@ function HoleScreen:update()
     if isMenuVisible then
         drawMenu()
     end
+    if isConfirmationVisible then
+        drawConfirmation()
+    end
 end
 
 function HoleScreen.downButtonDown()
@@ -176,21 +199,37 @@ function HoleScreen.rightButtonDown()
 end
 
 function HoleScreen.AButtonDown()
-    if isMenuVisible then
-        -- buy item
-        local item = holeItems[selectedMenuItem]
-        holeItems[selectedMenuItem].applied = not item.applied
+    if isConfirmationVisible then
+        currentBalance = currentBalance - holeItems[selectedMenuItem].price
+        -- implement smart apply
+        holeItems[selectedMenuItem].applied = true
         holeItems[selectedMenuItem].purchased = true
         saveCurrentState()
-
+        isConfirmationVisible = false
         isMenuVisible = false
+    elseif isMenuVisible then
+        local item = holeItems[selectedMenuItem]
+        if item.purchased then
+            -- implement smart apply
+            print("apply", not item.applied)
+            holeItems[selectedMenuItem].applied = not item.applied
+            saveCurrentState()
+            isMenuVisible = false
+        else
+            if currentBalance >= item.price then
+                isConfirmationVisible = true
+            end
+        end
+
     else
         isMenuVisible = true
     end
 end
 
 function HoleScreen.BButtonDown()
-    if isMenuVisible then
+    if isConfirmationVisible then
+        isConfirmationVisible = false
+    elseif isMenuVisible then
         isMenuVisible = false
     else
         ScreenManager.instance:showScreen("timer")
