@@ -59,23 +59,27 @@ local isConfirmationVisible = false
 local selectedMenuItem = 1
 
 local function drawMenu()
-    local itemHeight = 32
+
     local itemsInMenu = 5
-    local menuWidth = 220
+    local menuItemHeight = 32
+    local menuWidth = 250
+    local infoTextWidth = 120
+    local infoTextHeight = 120
+    local rightColWidth = 50
 
     -- menu background
     gfx.setColor(1)
-    gfx.fillRect(10, 10, menuWidth, itemHeight * itemsInMenu)
+    gfx.fillRect(10, 10, menuWidth, menuItemHeight * itemsInMenu)
     gfx.setColor(0)
-    gfx.drawRect(10, 10, menuWidth, itemHeight * itemsInMenu, 2)
+    gfx.drawRect(10, 10, menuWidth, menuItemHeight * itemsInMenu, 2)
 
     -- info text
     gfx.setColor(1)
-    gfx.fillRect(menuWidth + 10, 10, 140, 100)
+    gfx.fillRect(menuWidth + 10, 10, infoTextWidth, infoTextHeight)
     gfx.setColor(0)
-    gfx.drawRect(menuWidth + 10, 10, 140, 100, 2)
+    gfx.drawRect(menuWidth + 10, 10, infoTextWidth, infoTextHeight, 2)
     gfx.setFont(fontDefault)
-    gfx.drawTextInRect(holeItems[selectedMenuItem].description, menuWidth + 20, 20, 125, 90)
+    gfx.drawTextInRect(holeItems[selectedMenuItem].description, menuWidth + 20, 20, infoTextWidth - 20, infoTextHeight)
 
     local i = 1
     local currentPosition = 1
@@ -90,12 +94,12 @@ local function drawMenu()
         if i >= startIndex and i <= endIndex then
             if i == selectedMenuItem then
                 gfx.setColor(0)
-                gfx.fillRect(10, 10 + ((currentPosition - 1) * itemHeight), 220, itemHeight)
+                gfx.fillRect(10, 10 + ((currentPosition - 1) * menuItemHeight), menuWidth, menuItemHeight)
                 gfx.setColor(1)
                 gfx.setImageDrawMode(gfx.kDrawModeInverted)
 
             end
-            gfx.drawText(item.title, 20, 20 + ((currentPosition - 1) * itemHeight))
+            gfx.drawText(item.title, 20, 20 + ((currentPosition - 1) * menuItemHeight))
             local statusText = "$" .. item.price
             if item.applied then
                 statusText = "v"
@@ -103,7 +107,10 @@ local function drawMenu()
                 statusText = ""
             end
 
-            gfx.drawText(statusText, 170, 20 + ((currentPosition - 1) * itemHeight))
+            gfx.setColor(i == selectedMenuItem and 0 or 1)
+            gfx.fillRect(menuWidth - rightColWidth, 12 + (currentPosition - 1) * menuItemHeight, rightColWidth,
+                menuItemHeight - 4)
+            gfx.drawText(statusText, menuWidth - 40, 20 + ((currentPosition - 1) * menuItemHeight))
             gfx.setImageDrawMode(gfx.kDrawModeCopy)
             currentPosition = currentPosition + 1
         end
