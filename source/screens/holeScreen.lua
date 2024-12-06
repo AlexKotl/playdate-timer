@@ -29,28 +29,28 @@ local holeItems = {{
     title = "Small desk",
     category = "desk",
     description = "Almost fits for work.",
-    price = 100,
+    price = 20,
     image = gfx.image.new("assets/hole/desk1")
 }, {
     key = "windows1",
     title = "Windows",
     category = "windows",
     description = "Windows for sun",
-    price = 200,
+    price = 0,
     image = gfx.image.new("assets/hole/windows1")
 }, {
     key = "windows2",
     title = "Windows without cracks",
     category = "windows",
     description = "",
-    price = 500,
+    price = 200,
     image = gfx.image.new("assets/hole/windows2")
 }, {
     key = "windows3",
     title = "Big windows",
     category = "windows",
     description = "",
-    price = 1000,
+    price = 500,
     image = gfx.image.new("assets/hole/windows3")
 }}
 local currentBalance = 0
@@ -165,7 +165,22 @@ end
 
 function HoleScreen:show()
     gfx.setFont(fontBigger)
-    local data = Storage.load("hole") or {}
+    local data = Storage.load("hole") or {
+        balance = 0,
+        items = {{
+            key = "hole1",
+            purchased = true,
+            applied = true
+        }, {
+            key = "couch1",
+            purchased = true,
+            applied = true
+        }, {
+            key = "windows1",
+            purchased = true,
+            applied = true
+        }}
+    }
     currentBalance = data.balance or 0
     for i, item in ipairs(data.items or {}) do
         for j, holeItem in ipairs(holeItems) do
