@@ -60,7 +60,6 @@ local selectedMenuItem = 1
 local checkIcon = gfx.image.new("assets/icons/check")
 
 local function drawMenu()
-
     local itemsInMenu = 5
     local menuItemHeight = 32
     local menuWidth = 250
@@ -118,23 +117,6 @@ local function drawMenu()
             currentPosition = currentPosition + 1
         end
     end
-end
-
-local function drawConfirmation()
-    local windowWidth = 300
-    local windowHeight = 150
-    gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
-    gfx.fillRect(0, 0, 400, 240)
-    gfx.setColor(1)
-    gfx.fillRect(50, 50, windowWidth, windowHeight)
-    gfx.setColor(0)
-    gfx.drawRect(50, 50, windowWidth, windowHeight, 2)
-    gfx.setFont(fontBigger)
-    local item = holeItems[selectedMenuItem]
-    gfx.drawTextInRect("Are you sure you want to buy " .. item.title .. " for $" .. item.price .. "?", 70, 70, 260, 100)
-
-    Button.draw(235, windowHeight, "Buy", "a")
-    Button.draw(70, windowHeight, "Cancel", "b")
 end
 
 local function applyItem(index, show)
@@ -218,6 +200,7 @@ function HoleScreen:update()
     gfx.drawText("You have: $" .. currentBalance, 80, 10)
     gfx.drawText("Hole value: $" .. holeValue, 220, 10)
     if not isMenuVisible then
+        -- TODO: show only if enough money
         Button.draw(5, 200, "Upgrade", "a")
     end
 
@@ -225,7 +208,16 @@ function HoleScreen:update()
         drawMenu()
     end
     if isConfirmationVisible then
-        drawConfirmation()
+        local item = holeItems[selectedMenuItem]
+        Modal.draw("Are you sure you want to buy " .. item.title .. " for $" .. item.price .. "?", {{
+            posX = 235,
+            text = "Buy",
+            icon = "a"
+        }, {
+            posX = 70,
+            text = "Cancel",
+            icon = "b"
+        }})
     end
 end
 

@@ -6,6 +6,7 @@ Utils = import "utils"
 Storage = import "storage"
 Constants = import "constants"
 Button = import "components/button"
+Modal = import "components/modal"
 
 playdate.setAutoLockDisabled(true)
 
