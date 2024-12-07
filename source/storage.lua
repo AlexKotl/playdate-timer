@@ -22,6 +22,10 @@ function Storage.load(filename)
 end
 
 function Storage.recordedTimesToArchiveRecord(recordedTimes)
+    if not recordedTimes[1] then
+        return nil
+    end
+
     local archiveRecord = {
         ["date"] = recordedTimes[1]["date"]
     }

@@ -16,6 +16,8 @@ local startTime = nil
 local elapsedTime = 0
 local recordedTimes = {}
 local currentActivityNo = 1
+local isDaySummaryVisible = false
+local daySummaryText = ""
 
 local screenImage = gfx.image.new("assets/screen")
 local rabbit = Rabbit:init()
@@ -37,12 +39,16 @@ local function checkDateAndSaveArchive()
 
         -- adding balance
         local holeData = Storage.load("hole") or {}
-        holeData.balance = (holeData.balance or 0) + math.ceil(totalTime / 3600 * 10)
+        local earned = math.ceil(totalTime / 3600 * 10)
+        holeData.balance = (holeData.balance or 0) + earned
         Storage.save(holeData, "hole")
+
+        isDaySummaryVisible = true
+        daySummaryText =
+            "Past day you have tracked " .. Utils.secondsToTime(totalTime, true) .. ". Rabbit has earned $" .. earned ..
+                "."
     end
 end
-
-checkDateAndSaveArchive()
 
 local function toggleStopwatch()
     -- Stop
@@ -126,14 +132,31 @@ local function updateScreen()
 
     end
 
+    if isDaySummaryVisible then
+        Modal.draw(daySummaryText, {{
+            posX = 70,
+            text = "Fine",
+            icon = "a"
+        }})
+    end
+
     drawProgressbar()
 end
 
 function TimerScreen.AButtonDown()
+    if isDaySummaryVisible then
+        isDaySummaryVisible = false
+        return
+    end
     toggleStopwatch()
 end
 
 function TimerScreen.BButtonDown()
+    if isDaySummaryVisible then
+        isDaySummaryVisible = false
+        return
+    end
+
     if isRunning then
         toggleStopwatch()
     end
@@ -157,6 +180,7 @@ end
 function TimerScreen:show()
     recordedTimes = Storage.load("recordedTimes") or {}
     rabbit:setAnimation("idle")
+    checkDateAndSaveArchive()
 end
 
 function TimerScreen:hide()
