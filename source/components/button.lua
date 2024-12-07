@@ -17,12 +17,13 @@ function Button.draw(posX, posY, text, icon)
 
     gfx.setFont(fontBigger)
     gfx.setColor(1)
-    gfx.fillRoundRect(posX, posY, width, height, 3)
+    gfx.setLineWidth(2)
+    gfx.fillRoundRect(posX, posY, width, height, 4)
     gfx.setColor(0)
-    gfx.drawRoundRect(posX, posY, width, height, 3)
-    gfx.drawText(text, posX + gap, posY + gap)
+    gfx.drawRoundRect(posX, posY, width, height, 4)
+    gfx.drawText(text, posX + gap + (iconImage and 36 or 0), posY + gap)
     if iconImage then
-        iconImage:draw(posX + gap, posY + gap)
+        iconImage:draw(posX + 3, posY + 3)
     end
 end
 

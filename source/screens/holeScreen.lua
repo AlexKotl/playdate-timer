@@ -33,14 +33,14 @@ local holeItems = {{
     image = gfx.image.new("assets/hole/desk1")
 }, {
     key = "windows1",
-    title = "Windows",
+    title = "Cracked windows",
     category = "windows",
     description = "Windows for sun",
     price = 0,
     image = gfx.image.new("assets/hole/windows1")
 }, {
     key = "windows2",
-    title = "Windows without cracks",
+    title = "Windows",
     category = "windows",
     description = "",
     price = 200,
@@ -49,7 +49,7 @@ local holeItems = {{
     key = "windows3",
     title = "Big windows",
     category = "windows",
-    description = "",
+    description = "Bigger windows - more light.",
     price = 500,
     image = gfx.image.new("assets/hole/windows3")
 }}
@@ -57,6 +57,7 @@ local currentBalance = 0
 local isMenuVisible = false
 local isConfirmationVisible = false
 local selectedMenuItem = 1
+local checkIcon = gfx.image.new("assets/icons/check")
 
 local function drawMenu()
 
@@ -100,16 +101,18 @@ local function drawMenu()
 
             end
             gfx.drawText(item.title, 20, 20 + ((currentPosition - 1) * menuItemHeight))
-            local statusText = "$" .. item.price
-            if item.applied then
-                statusText = "v"
-            elseif item.purchased then
-                statusText = ""
-            end
 
             gfx.setColor(i == selectedMenuItem and 0 or 1)
             gfx.fillRect(menuWidth - rightColWidth, 12 + (currentPosition - 1) * menuItemHeight, rightColWidth,
                 menuItemHeight - 4)
+            local statusText = "$" .. item.price
+            if item.applied then
+                checkIcon:draw(menuWidth - 30, 10 + ((currentPosition - 1) * menuItemHeight))
+                statusText = ""
+            elseif item.purchased then
+                statusText = ""
+            end
+
             gfx.drawText(statusText, menuWidth - 40, 20 + ((currentPosition - 1) * menuItemHeight))
             gfx.setImageDrawMode(gfx.kDrawModeCopy)
             currentPosition = currentPosition + 1
@@ -118,16 +121,20 @@ local function drawMenu()
 end
 
 local function drawConfirmation()
+    local windowWidth = 300
+    local windowHeight = 150
     gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
     gfx.fillRect(0, 0, 400, 240)
     gfx.setColor(1)
-    gfx.fillRect(50, 50, 300, 100)
+    gfx.fillRect(50, 50, windowWidth, windowHeight)
     gfx.setColor(0)
-    gfx.drawRect(50, 50, 300, 100, 2)
+    gfx.drawRect(50, 50, windowWidth, windowHeight, 2)
     gfx.setFont(fontBigger)
     local item = holeItems[selectedMenuItem]
     gfx.drawTextInRect("Are you sure you want to buy " .. item.title .. " for $" .. item.price .. "?", 70, 70, 260, 100)
-    -- TODO: draw buttons
+
+    Button.draw(235, windowHeight, "Buy", "a")
+    Button.draw(70, windowHeight, "Cancel", "b")
 end
 
 local function applyItem(index, show)
@@ -210,7 +217,9 @@ function HoleScreen:update()
 
     gfx.drawText("You have: $" .. currentBalance, 80, 10)
     gfx.drawText("Hole value: $" .. holeValue, 220, 10)
-    Button.draw(10, 10, "Upgrade hole", "a")
+    if not isMenuVisible then
+        Button.draw(5, 200, "Upgrade", "a")
+    end
 
     if isMenuVisible then
         drawMenu()
