@@ -5,7 +5,7 @@ import "CoreLibs/timer"
 local Rabbit = import "rabbit"
 
 local gfx<const> = playdate.graphics
-local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-16")
+local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
 local fontClock<const> = gfx.font.new("fonts/Clock/Clock")
 gfx.setFontTracking(1)

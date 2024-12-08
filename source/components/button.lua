@@ -2,7 +2,7 @@ local Button = {}
 Button.__index = Button
 
 local gfx<const> = playdate.graphics
-local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-14")
+local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 
 function Button.draw(posX, posY, text, icon)
     local height = 36

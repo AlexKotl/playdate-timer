@@ -2,7 +2,7 @@ local Modal = {}
 Modal.__index = Modal
 
 local gfx<const> = playdate.graphics
-local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-14")
+local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 
 function Modal.draw(text, buttons)
     local windowWidth = 300

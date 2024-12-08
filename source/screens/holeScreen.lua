@@ -1,7 +1,7 @@
 HoleScreen = Screen:new()
 
 local gfx<const> = playdate.graphics
-local fontBigger<const> = gfx.font.new("fonts/Pedallica/font-pedallica-fun-14")
+local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
 local holeItems = {{
     key = "hole1",
