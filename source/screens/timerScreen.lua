@@ -119,6 +119,9 @@ local function updateScreen()
         gfx.drawText(string.upper(Constants.activities[currentActivityNo].name), 20, 50)
         gfx.setFont(fontClock)
         gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
+        if displayTime > 3600 then
+            toggleStopwatch()
+        end
     else
         gfx.setFont(fontDefault)
         gfx.drawText("Press A to start working", 30, 189)
@@ -129,7 +132,6 @@ local function updateScreen()
                 gfx.drawRect(36 + ((i - 1) * (64 + 25)) - 5, 110 - 5, 74, 74)
             end
         end
-
     end
 
     if isDaySummaryVisible then

@@ -12,6 +12,7 @@ local currentWeekNo = 1
 local currentDayNo = 1
 local daysInMonth<const> = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 local daysOfWeek<const> = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
+local reportScreenImage = gfx.image.new("assets/reportScreen")
 
 local function isLeapYear(year)
     return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)
@@ -137,39 +138,47 @@ end
 
 function ReportScreen:update()
     gfx.clear()
+    reportScreenImage:draw(0, 0)
     gfx.setFont(fontDefault)
-    gfx.drawText("Week: " .. archiveWeeks[currentWeekNo], 20, 20)
+    local weeks = archiveWeeks[currentWeekNo]:gmatch("%d%d%.%d%d");
+    gfx.drawText("Week: ", 55, 18)
+    gfx.drawText(weeks(0) .. " - ", 55, 37)
+    gfx.drawText(weeks(0), 55, 55)
+    gfx.drawText(daysOfWeek[currentDayNo], 153, 52)
     local maxTime = 0
     for i, record in pairs(archiveByWeek[archiveWeeks[currentWeekNo]]) do
         maxTime = math.max(maxTime, record.elapsed)
     end
     local pixelRate = 100 / maxTime
-
-    -- draw grid
-    gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
-    for i = 0, math.floor(maxTime / 3600) do
-        gfx.drawLine(20, 190 - i * 3600 * pixelRate, 370, 190 - i * 3600 * pixelRate, 2)
-    end
+    local chartOffset = 195
+    local chartDaysOffset = 212
 
     -- draw day summary
     local daySummary = archiveByWeek[archiveWeeks[currentWeekNo]][currentDayNo]
     for i, activity in ipairs(Constants.activities) do
-        local timeStr = '-'
+        local timeStr = '  -'
         if daySummary and daySummary[activity.name] then
             timeStr = Utils.secondsToTime(daySummary[activity.name], true)
         end
-        Constants.activities[i].icon:drawScaled(150 + i * 50, 10, 0.5)
-        gfx.drawText(timeStr, 150 + i * 50, 50)
+        Constants.activities[i].icon:drawScaled(158 + i * 47, 17, 0.5)
+        gfx.drawText(timeStr, 155 + i * 47, 55)
+    end
+
+    -- draw grid
+    gfx.setDitherPattern(0.8, gfx.image.kDitherTypeScreen)
+    for i = 0, math.floor(maxTime / 3600) do
+        gfx.drawLine(20, chartOffset - i * 3600 * pixelRate, 370, chartOffset - i * 3600 * pixelRate, 2)
     end
 
     -- chart by days
     for day = 1, 7 do
         local record = archiveByWeek[archiveWeeks[currentWeekNo]][day]
         local x = 30 + (day - 1) * 50
-        gfx.drawText(daysOfWeek[day], x, 210)
+        gfx.drawText(daysOfWeek[day], x, chartDaysOffset)
         if day == currentDayNo then
-            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeDiagonalLine)
-            gfx.drawRect(x - 8, 200, 45, 35, 3)
+            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeScreen)
+            gfx.setLineWidth(3)
+            gfx.drawRoundRect(x - 9, chartDaysOffset - 8, 45, 30, 3)
         end
 
         local barHeight = 3
@@ -180,7 +189,7 @@ function ReportScreen:update()
                 barHeight = (record[activity.name] or 0) * pixelRate * animationTimer.value
 
                 gfx.setDitherPattern(activity.ditherValue, activity.ditherPattern)
-                gfx.fillRect(x + 2, 190 - offset - barHeight, 20, barHeight)
+                gfx.fillRect(x + 2, chartOffset - offset - barHeight, 20, barHeight)
                 offset = offset + barHeight
             end
         end
