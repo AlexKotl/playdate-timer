@@ -201,7 +201,7 @@ function HoleScreen:update()
     gfx.drawText("Hole value: $" .. holeValue, 220, 10)
     if not isMenuVisible then
         -- TODO: show only if enough money
-        Button.draw(5, 200, "Upgrade", "a")
+        Button.draw(10, 195, "Upgrade", "a")
     end
 
     if isMenuVisible then

@@ -1,0 +1,7 @@
+name=Productivity Rabbit
+author=Slicer
+description=Time tracker for life
+bundleID=com.slicer.productivityrabbit
+version=0.3
+buildNumber=1
+imagePath=assets/launcher/card.png
