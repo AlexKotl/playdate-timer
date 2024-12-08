@@ -13,6 +13,36 @@ local currentDayNo = 1
 local daysInMonth<const> = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 local daysOfWeek<const> = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
 local reportScreenImage = gfx.image.new("assets/reportScreen")
+local buttonHover = {
+    left = {
+        highlighted = false,
+        x = 144,
+        y = 12,
+        width = 22,
+        height = 30
+    },
+    right = {
+        highlighted = false,
+        x = 169,
+        y = 12,
+        width = 22,
+        height = 30
+    },
+    up = {
+        highlighted = false,
+        x = 14,
+        y = 12,
+        width = 28,
+        height = 30
+    },
+    down = {
+        highlighted = false,
+        x = 14,
+        y = 45,
+        width = 28,
+        height = 28
+    }
+}
 
 local function isLeapYear(year)
     return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)
@@ -104,6 +134,15 @@ local function getDayOfWeek(dateString)
     return adjustedDay
 end
 
+local function hightlightButton(button)
+    if buttonHover[button] then
+        buttonHover[button].highlighted = true
+        playdate.timer.new(100, function()
+            buttonHover[button].highlighted = false
+        end)
+    end
+end
+
 local function resetAnimation()
     animationTimer = playdate.timer.new(500, 0, 1)
 end
@@ -176,7 +215,7 @@ function ReportScreen:update()
         local x = 30 + (day - 1) * 50
         gfx.drawText(daysOfWeek[day], x, chartDaysOffset)
         if day == currentDayNo then
-            gfx.setDitherPattern(0.5, gfx.image.kDitherTypeScreen)
+            gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
             gfx.setLineWidth(3)
             gfx.drawRoundRect(x - 9, chartDaysOffset - 8, 45, 30, 3)
         end
@@ -195,6 +234,14 @@ function ReportScreen:update()
         end
     end
 
+    -- highlight buttons
+    for button, data in pairs(buttonHover) do
+        if data.highlighted then
+            gfx.setDitherPattern(0.3, gfx.image.kDitherTypeScreen)
+            gfx.fillRoundRect(data.x, data.y, data.width, data.height, 5)
+        end
+    end
+
     playdate.timer.updateTimers()
 end
 
@@ -204,6 +251,7 @@ function ReportScreen.downButtonDown()
     if currentWeekNo < 1 then
         currentWeekNo = 1
     else
+        hightlightButton("down")
         resetAnimation()
     end
 end
@@ -214,12 +262,14 @@ function ReportScreen.upButtonDown()
     if currentWeekNo > #archiveWeeks then
         currentWeekNo = #archiveWeeks
     else
+        hightlightButton("up")
         resetAnimation()
     end
 end
 
 function ReportScreen.leftButtonDown()
     currentDayNo = currentDayNo - 1
+    hightlightButton("left")
     if currentDayNo < 1 then
         currentDayNo = 7
     end
@@ -227,6 +277,7 @@ end
 
 function ReportScreen.rightButtonDown()
     currentDayNo = currentDayNo + 1
+    hightlightButton("right")
     if currentDayNo > 7 then
         currentDayNo = 1
     end
