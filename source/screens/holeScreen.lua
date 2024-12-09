@@ -58,6 +58,8 @@ local isMenuVisible = false
 local isConfirmationVisible = false
 local selectedMenuItem = 1
 local checkIcon = gfx.image.new("assets/icons/check")
+local cloudsImage = gfx.image.new("assets/hole/clouds")
+local cloudsPosition = 0
 
 local function drawMenu()
     local itemsInMenu = 5
@@ -187,6 +189,12 @@ end
 function HoleScreen:update()
     gfx.clear()
     local holeValue = 0
+    gfx.sprite.update()
+
+    -- update clouds
+    cloudsPosition = cloudsPosition <= 400 and cloudsPosition + 0.2 or 1
+    cloudsImage:draw(cloudsPosition, 0)
+    cloudsImage:draw(cloudsPosition - 400, 0)
 
     for i, item in ipairs(holeItems) do
         if item.applied and item.image then

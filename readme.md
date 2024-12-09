@@ -8,7 +8,7 @@ Basic activities are:
 
 - work
 - meeting
-- gaming
+- learning
 - creativity
 
 ## Links
