@@ -163,7 +163,7 @@ function ReportScreen:show()
             archiveByWeek[weekKey] = {}
             table.insert(archiveWeeks, weekKey)
         end
-        record.elapsed = (record.work or 0) + (record.meeting or 0) + (record.gaming or 0) + (record.creativity or 0)
+        record.elapsed = (record.work or 0) + (record.meeting or 0) + (record.learning or 0) + (record.creativity or 0)
         archiveByWeek[weekKey][dayOfWeek] = record
         print(weekKey, dayOfWeek, record.date, record.elapsed)
     end
@@ -188,7 +188,8 @@ function ReportScreen:update()
     for i, record in pairs(archiveByWeek[archiveWeeks[currentWeekNo]]) do
         maxTime = math.max(maxTime, record.elapsed)
     end
-    local pixelRate = 100 / maxTime
+
+    local pixelRate = 95 / maxTime
     local chartOffset = 195
     local chartDaysOffset = 212
 
