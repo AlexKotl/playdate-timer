@@ -61,6 +61,7 @@ local isConfirmationVisible = false
 local selectedMenuItem = 1
 local checkIcon = gfx.image.new("assets/icons/check")
 local cloudsImage = gfx.image.new("assets/hole/clouds")
+local holeScreen = gfx.image.new("assets/holeScreen")
 local cloudsPosition = 0
 
 local function drawMenu()
@@ -223,11 +224,15 @@ function HoleScreen:update()
         item.image:draw(1, 1)
     end
 
-    gfx.drawText("You have: $" .. currentBalance, 80, 10)
-    gfx.drawText("Hole value: $" .. holeValue, 220, 10)
+    holeScreen:draw(0, 0)
+
+    gfx.drawText("Balance:", 38, 10)
+    gfx.drawText("$" .. currentBalance, 115, 10)
+    gfx.drawText("Hole value:", 195, 10)
+    gfx.drawText("$" .. holeValue, 295, 10)
     if not isMenuVisible then
         -- TODO: show only if enough money
-        Button.draw(10, 195, "Upgrade", "a")
+        Button.draw(10, 165, "Upgrade", "a")
     end
 
     if isMenuVisible then
