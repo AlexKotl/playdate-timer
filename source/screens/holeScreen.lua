@@ -3,6 +3,8 @@ HoleScreen = Screen:new()
 local gfx<const> = playdate.graphics
 local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
+
+local categoriesOrder<const> = {"hole", "windows", "couch", "desk", "kitchen", "carpet"}
 local holeItems = {{
     key = "hole1",
     title = "Basic hole",
@@ -181,6 +183,14 @@ function HoleScreen:show()
             end
         end
     end
+    -- apply layers order
+    for i, item in ipairs(holeItems) do
+        for j, category in ipairs(categoriesOrder) do
+            if item.category == category then
+                item.layer = j
+            end
+        end
+    end
 end
 
 function HoleScreen:hide()
@@ -196,13 +206,21 @@ function HoleScreen:update()
     cloudsImage:draw(cloudsPosition, 0)
     cloudsImage:draw(cloudsPosition - 400, 0)
 
+    local itemsToDraw = {}
     for i, item in ipairs(holeItems) do
         if item.applied and item.image then
+            table.insert(itemsToDraw, item)
             item.image:draw(1, 1)
         end
         if item.purchased then
             holeValue = holeValue + item.price
         end
+    end
+    table.sort(itemsToDraw, function(a, b)
+        return (a.layer or 0) < (b.layer or 0)
+    end)
+    for i, item in ipairs(itemsToDraw) do
+        item.image:draw(1, 1)
     end
 
     gfx.drawText("You have: $" .. currentBalance, 80, 10)
