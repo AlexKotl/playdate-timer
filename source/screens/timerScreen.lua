@@ -11,6 +11,7 @@ local fontClock<const> = gfx.font.new("fonts/Clock/Clock")
 gfx.setFontTracking(1)
 playdate.setAutoLockDisabled(true)
 
+local maxTime<const> = 90 * 60
 local isRunning = false
 local startTime = nil
 local elapsedTime = 0
@@ -119,7 +120,7 @@ local function updateScreen()
         gfx.drawText(string.upper(Constants.activities[currentActivityNo].name), 20, 50)
         gfx.setFont(fontClock)
         gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
-        if displayTime > 3600 then
+        if displayTime > maxTime then
             toggleStopwatch()
         end
     else

@@ -203,7 +203,7 @@ function HoleScreen:update()
     gfx.sprite.update()
 
     -- update clouds
-    cloudsPosition = cloudsPosition <= 400 and cloudsPosition + 0.2 or 1
+    cloudsPosition = cloudsPosition <= 400 and cloudsPosition + 0.05 or 1
     cloudsImage:draw(cloudsPosition, 0)
     cloudsImage:draw(cloudsPosition - 400, 0)
 
@@ -211,7 +211,7 @@ function HoleScreen:update()
     for i, item in ipairs(holeItems) do
         if item.applied and item.image then
             table.insert(itemsToDraw, item)
-            item.image:draw(1, 1)
+            item.image:draw(0, 0)
         end
         if item.purchased then
             holeValue = holeValue + item.price
@@ -221,14 +221,14 @@ function HoleScreen:update()
         return (a.layer or 0) < (b.layer or 0)
     end)
     for i, item in ipairs(itemsToDraw) do
-        item.image:draw(1, 1)
+        item.image:draw(0, 0)
     end
 
     holeScreen:draw(0, 0)
 
-    gfx.drawText("Balance:", 38, 10)
-    gfx.drawText("$" .. currentBalance, 115, 10)
-    gfx.drawText("Hole value:", 195, 10)
+    gfx.drawText("Balance:", 50, 10)
+    gfx.drawText("$" .. currentBalance, 128, 10)
+    gfx.drawText("Hole value:", 197, 10)
     gfx.drawText("$" .. holeValue, 295, 10)
     if not isMenuVisible then
         -- TODO: show only if enough money
