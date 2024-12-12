@@ -5,56 +5,7 @@ local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
 
 local categoriesOrder<const> = {"hole", "windows", "couch", "desk", "kitchen", "carpet"}
-local holeItems = {{
-    key = "hole1",
-    title = "Basic hole",
-    category = "hole",
-    description = "A hole in the ground for rabbits.",
-    price = 0,
-    image = gfx.image.new("assets/hole/hole1")
-}, {
-    key = "couch1",
-    title = "Basic couch",
-    category = "couch",
-    description = "Just simple smelly old couch.",
-    price = 0,
-    image = gfx.image.new("assets/hole/couch1")
-}, {
-    key = "carpet1",
-    title = "Small carpet",
-    category = "carpet",
-    description = "Carpet. It's small. It smells. It's carpet.",
-    price = 20,
-    image = gfx.image.new("assets/hole/carpet1")
-}, {
-    key = "desk1",
-    title = "Small desk",
-    category = "desk",
-    description = "Almost fits for work.",
-    price = 20,
-    image = gfx.image.new("assets/hole/desk1")
-}, {
-    key = "windows1",
-    title = "Cracked windows",
-    category = "windows",
-    description = "Windows for sun",
-    price = 0,
-    image = gfx.image.new("assets/hole/windows1")
-}, {
-    key = "windows2",
-    title = "Windows",
-    category = "windows",
-    description = "",
-    price = 200,
-    image = gfx.image.new("assets/hole/windows2")
-}, {
-    key = "windows3",
-    title = "Big windows",
-    category = "windows",
-    description = "Bigger windows - more light.",
-    price = 500,
-    image = gfx.image.new("assets/hole/windows3")
-}}
+local holeItems = {}
 local currentBalance = 0
 local isMenuVisible = false
 local isConfirmationVisible = false
@@ -176,6 +127,7 @@ function HoleScreen:show()
         }}
     }
     currentBalance = data.balance or 0
+    holeItems = Constants.holeItems
     for i, item in ipairs(data.items or {}) do
         for j, holeItem in ipairs(holeItems) do
             if holeItem.key == item.key then
