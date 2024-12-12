@@ -159,6 +159,7 @@ function HoleScreen:update()
     cloudsImage:draw(cloudsPosition - 400, 0)
 
     local itemsToDraw = {}
+    local lowestUpgradePrice = 0
     for i, item in ipairs(holeItems) do
         if item.applied and item.image then
             table.insert(itemsToDraw, item)
@@ -166,6 +167,11 @@ function HoleScreen:update()
         end
         if item.purchased then
             holeValue = holeValue + item.price
+        end
+
+        -- calculate lowest upgrade price to show upgrade button
+        if not item.purchased and item.price > 0 and (lowestUpgradePrice == 0 or lowestUpgradePrice > item.price) then
+            lowestUpgradePrice = item.price
         end
     end
     table.sort(itemsToDraw, function(a, b)
@@ -181,8 +187,8 @@ function HoleScreen:update()
     gfx.drawText("$" .. currentBalance, 128, 10)
     gfx.drawText("Hole value:", 197, 10)
     gfx.drawText("$" .. holeValue, 295, 10)
-    if not isMenuVisible then
-        -- TODO: show only if enough money
+    print('lowestUpgradePrice', lowestUpgradePrice)
+    if not isMenuVisible and lowestUpgradePrice <= currentBalance then
         Button.draw(10, 165, "Upgrade", "a")
     end
 
