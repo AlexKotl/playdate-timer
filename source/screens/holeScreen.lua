@@ -4,7 +4,6 @@ local gfx<const> = playdate.graphics
 local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
 
-local categoriesOrder<const> = {"hole", "windows", "couch", "desk", "kitchen", "carpet"}
 local holeItems = {}
 local currentBalance = 0
 local isMenuVisible = false
@@ -62,7 +61,7 @@ local function drawMenu()
                 menuItemHeight - 4)
             local statusText = "$" .. item.price
             if item.applied then
-                checkIcon:draw(menuWidth - 30, 10 + ((currentPosition - 1) * menuItemHeight))
+                checkIcon:draw(menuWidth - 40, 10 + ((currentPosition - 1) * menuItemHeight))
                 statusText = ""
             elseif item.purchased then
                 statusText = ""
@@ -138,7 +137,7 @@ function HoleScreen:show()
     end
     -- apply layers order
     for i, item in ipairs(holeItems) do
-        for j, category in ipairs(categoriesOrder) do
+        for j, category in ipairs(Constants.categoriesOrder) do
             if item.category == category then
                 item.layer = j
             end

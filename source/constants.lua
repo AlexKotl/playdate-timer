@@ -26,18 +26,20 @@ Constants.activities = {{
 }}
 
 -- Hole setup
+Constants.categoriesOrder = {"hole", "windows", "picture", "carpet", "plant", "couch", "desk"}
+
 Constants.holeItems = {{
     key = "hole1",
     title = "Hole",
     category = "hole",
-    description = "A hole in the ground for rabbits.",
+    description = "A premium rabbit real estate option. Cozy, dark, and always dirt-cheap.",
     price = 0,
     image = gfx.image.new("assets/hole/hole1")
 }, {
     key = "couch1",
     title = "Small couch",
     category = "couch",
-    description = "Just simple smelly old couch.",
+    description = "Vintage couch with a mysterious aroma. Adds 'character' to your burrow.",
     price = 0,
     image = gfx.image.new("assets/hole/couch1")
 }, {
@@ -51,7 +53,7 @@ Constants.holeItems = {{
     key = "desk1",
     title = "Small desk",
     category = "desk",
-    description = "Almost fits for work.",
+    description = "Perfect for rabbits with small ambitions—or small paws.",
     price = 100,
     image = gfx.image.new("assets/hole/desk1")
 }, {
@@ -79,21 +81,21 @@ Constants.holeItems = {{
     key = "couch2",
     title = "Modern couch",
     category = "couch",
-    description = "Modern couch for modern rabbits. Soft and cozy.",
+    description = "Sleek, soft, and perfect for Netflix and carrots.",
     price = 300,
     image = gfx.image.new("assets/hole/couch2")
 }, {
     key = "carpet2",
     title = "Scandi carpet",
     category = "carpet",
-    description = "This new carpet has cool scandinavian pattern.",
+    description = "A Scandinavian masterpiece. Pairs well with minimalist holes.",
     price = 200,
     image = gfx.image.new("assets/hole/carpet2")
 }, {
     key = "desk2",
     title = "Desk with stump",
     category = "desk",
-    description = "Good working table with a stump for sitting.",
+    description = "Work like a pro, sit like a squirrel. Stump included!",
     price = 300,
     image = gfx.image.new("assets/hole/desk2")
 }, {
@@ -142,14 +144,14 @@ Constants.holeItems = {{
     key = "plant3",
     title = "Room tree",
     category = "plant",
-    description = "Almost real size tree in a pot.",
+    description = "A tree so big your hole will feel like a jungle.",
     price = 1200,
     image = gfx.image.new("assets/hole/plant3")
 }, {
     key = "picture3",
     title = "Big picture",
     category = "picture",
-    description = "Big expensive picture from famous artist.",
+    description = "Expensive art for rabbits who hop high in society.",
     price = 7000,
     image = gfx.image.new("assets/hole/picture3")
 }, {
