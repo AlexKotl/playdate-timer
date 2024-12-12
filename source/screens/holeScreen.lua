@@ -19,7 +19,7 @@ local function drawMenu()
     local itemsInMenu = 5
     local menuItemHeight = 32
     local menuWidth = 250
-    local infoTextWidth = 120
+    local infoTextWidth = 130
     local infoTextHeight = 120
     local rightColWidth = 50
 
