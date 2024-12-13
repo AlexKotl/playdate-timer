@@ -8,6 +8,7 @@ local holeItems = {}
 local currentBalance = 0
 local isMenuVisible = false
 local isConfirmationVisible = false
+local isNotEnoughModalVisible = false
 local selectedMenuItem = 1
 local checkIcon = gfx.image.new("assets/icons/check")
 local cloudsImage = gfx.image.new("assets/hole/clouds")
@@ -187,7 +188,6 @@ function HoleScreen:update()
     gfx.drawText("$" .. currentBalance, 128, 10)
     gfx.drawText("Hole value:", 197, 10)
     gfx.drawText("$" .. holeValue, 295, 10)
-    print('lowestUpgradePrice', lowestUpgradePrice)
     if not isMenuVisible and lowestUpgradePrice <= currentBalance then
         Button.draw(10, 165, "Upgrade", "a")
     end
@@ -205,6 +205,13 @@ function HoleScreen:update()
             posX = 70,
             text = "Cancel",
             icon = "b"
+        }})
+    end
+    if isNotEnoughModalVisible then
+        Modal.draw("You don't have enough money to buy this. Money will be added next day for the tracked time.", {{
+            posX = 70,
+            text = "Ok",
+            icon = "a"
         }})
     end
 end
@@ -239,6 +246,8 @@ function HoleScreen.AButtonDown()
         saveCurrentState()
         isConfirmationVisible = false
         isMenuVisible = false
+    elseif isNotEnoughModalVisible then
+        isNotEnoughModalVisible = false
     elseif isMenuVisible then
         local item = holeItems[selectedMenuItem]
         if item.purchased then
@@ -248,6 +257,8 @@ function HoleScreen.AButtonDown()
         else
             if currentBalance >= item.price then
                 isConfirmationVisible = true
+            else
+                isNotEnoughModalVisible = true
             end
         end
 
@@ -259,6 +270,8 @@ end
 function HoleScreen.BButtonDown()
     if isConfirmationVisible then
         isConfirmationVisible = false
+    elseif isNotEnoughModalVisible then
+        isNotEnoughModalVisible = false
     elseif isMenuVisible then
         isMenuVisible = false
     else
