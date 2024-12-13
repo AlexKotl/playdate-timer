@@ -3,6 +3,7 @@ HoleScreen = Screen:new()
 local gfx<const> = playdate.graphics
 local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
+local Splash = import "splash"
 
 local holeItems = {}
 local currentBalance = 0
@@ -14,6 +15,7 @@ local checkIcon = gfx.image.new("assets/icons/check")
 local cloudsImage = gfx.image.new("assets/hole/clouds")
 local holeScreen = gfx.image.new("assets/holeScreen")
 local cloudsPosition = 0
+local splash = Splash:init()
 
 local function drawMenu()
     local itemsInMenu = 5
@@ -182,6 +184,8 @@ function HoleScreen:update()
         item.image:draw(0, 0)
     end
 
+    splash:draw()
+
     holeScreen:draw(0, 0)
 
     gfx.drawText("Balance:", 50, 10)
@@ -214,6 +218,8 @@ function HoleScreen:update()
             icon = "a"
         }})
     end
+
+    playdate.timer.updateTimers()
 end
 
 function HoleScreen.downButtonDown()
@@ -254,6 +260,9 @@ function HoleScreen.AButtonDown()
             applyItem(selectedMenuItem, not item.applied)
             saveCurrentState()
             isMenuVisible = false
+            if item.applied then
+                splash:run()
+            end
         else
             if currentBalance >= item.price then
                 isConfirmationVisible = true
