@@ -17,7 +17,6 @@ end
 
 function Splash:run()
     for i = 1, partialsCount do
-        print('init partial', i)
         table.insert(self.partials, {
             x = math.random(30, 370),
             y = math.random(20, 220),

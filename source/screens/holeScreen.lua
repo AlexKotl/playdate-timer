@@ -3,7 +3,7 @@ HoleScreen = Screen:new()
 local gfx<const> = playdate.graphics
 local fontBigger<const> = gfx.font.new("fonts/Roobert/Roobert-10-Bold")
 local fontDefault<const> = gfx.font.new("fonts/Cuberick/font-Cuberick-bold")
-local Splash = import "splash"
+local Splash = import "components/splash"
 
 local holeItems = {}
 local currentBalance = 0
@@ -246,12 +246,14 @@ end
 
 function HoleScreen.AButtonDown()
     if isConfirmationVisible then
+        -- buy item
         currentBalance = currentBalance - holeItems[selectedMenuItem].price
         applyItem(selectedMenuItem, true)
         holeItems[selectedMenuItem].purchased = true
         saveCurrentState()
         isConfirmationVisible = false
         isMenuVisible = false
+        splash:run()
     elseif isNotEnoughModalVisible then
         isNotEnoughModalVisible = false
     elseif isMenuVisible then
@@ -260,9 +262,6 @@ function HoleScreen.AButtonDown()
             applyItem(selectedMenuItem, not item.applied)
             saveCurrentState()
             isMenuVisible = false
-            if item.applied then
-                splash:run()
-            end
         else
             if currentBalance >= item.price then
                 isConfirmationVisible = true
