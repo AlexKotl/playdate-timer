@@ -13,8 +13,6 @@ Basic activities are:
 
 ## Description
 
-![alt text](https://raw.githubusercontent.com/AlexKotl/playdate-timer/refs/heads/main/design/screenshots/3.png?token=GHSAT0AAAAAACZR5HRO5T2AV6MVOY5YSA6IZ3HIIWQ)
-
 Productivity Rabbit is a time tracking app with game elements, that aimed to improve your productivity. 
 
 - track time, grouped by 4 different activities
