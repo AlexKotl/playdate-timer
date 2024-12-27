@@ -12,6 +12,7 @@ gfx.setFontTracking(1)
 playdate.setAutoLockDisabled(true)
 
 local maxTime<const> = 90 * 60
+local alarmTime<const> = 45 * 60
 local isRunning = false
 local startTime = nil
 local elapsedTime = 0
@@ -19,9 +20,14 @@ local recordedTimes = {}
 local currentActivityNo = 1
 local isDaySummaryVisible = false
 local daySummaryText = ""
+local hasPlayedAlarm = false
 
 local screenImage = gfx.image.new("assets/screen")
 local rabbit = Rabbit:init()
+
+local sounds = {
+    alarm = playdate.sound.fileplayer.new("sounds/alarm.mp3")
+}
 
 local function checkDateAndSaveArchive()
     if recordedTimes[1] and (not recordedTimes[1]['date'] or recordedTimes[1]['date'] ~= Utils.currentDate()) then
@@ -74,7 +80,7 @@ local function toggleStopwatch()
         isRunning = true
         rabbit:setAnimation("working")
     end
-
+    hasPlayedAlarm = false
 end
 
 local function drawProgressbar()
@@ -122,6 +128,10 @@ local function updateScreen()
         gfx.drawText(Utils.secondsToTime(displayTime), 65, 110)
         if displayTime > maxTime then
             toggleStopwatch()
+        end
+        if displayTime >= alarmTime and not hasPlayedAlarm then
+            sounds.alarm:play()
+            hasPlayedAlarm = true
         end
     else
         gfx.setFont(fontDefault)
