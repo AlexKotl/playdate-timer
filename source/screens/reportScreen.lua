@@ -44,6 +44,10 @@ local buttonHover = {
     }
 }
 
+local sounds = {
+    swap = playdate.sound.fileplayer.new("sounds/swap.mp3")
+}
+
 local function isLeapYear(year)
     return (year % 4 == 0 and year % 100 ~= 0) or (year % 400 == 0)
 end
@@ -286,4 +290,5 @@ end
 
 function ReportScreen.BButtonDown()
     ScreenManager.instance:showScreen("hole")
+    sounds.swap:play()
 end

@@ -26,7 +26,10 @@ local screenImage = gfx.image.new("assets/screen")
 local rabbit = Rabbit:init()
 
 local sounds = {
-    alarm = playdate.sound.fileplayer.new("sounds/alarm.mp3")
+    alarm = playdate.sound.fileplayer.new("sounds/alert-question.mp3"),
+    start = playdate.sound.fileplayer.new("sounds/start.mp3"),
+    stop = playdate.sound.fileplayer.new("sounds/stop.mp3"),
+    swap = playdate.sound.fileplayer.new("sounds/swap.mp3")
 }
 
 local function checkDateAndSaveArchive()
@@ -74,11 +77,13 @@ local function toggleStopwatch()
         isRunning = false
         rabbit:setAnimation("idle")
         Storage.save(recordedTimes, "recordedTimes")
+        sounds.stop:play()
     else
         elapsedTime = 0
         startTime = playdate.getSecondsSinceEpoch()
         isRunning = true
         rabbit:setAnimation("working")
+        sounds.start:play()
     end
     hasPlayedAlarm = false
 end
@@ -174,6 +179,7 @@ function TimerScreen.BButtonDown()
         toggleStopwatch()
     end
     ScreenManager.instance:showScreen("report")
+    sounds.swap:play()
 end
 
 function TimerScreen.rightButtonDown()
