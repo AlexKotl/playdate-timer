@@ -152,7 +152,9 @@ local function resetAnimation()
 end
 
 function ReportScreen:show()
-    archiveData = Storage.load("archiveData") or {}
+    archiveData = Storage.load("archiveData") or {{
+        date = Utils.currentDate()
+    }}
     -- add current day stats
     table.insert(archiveData, Storage.recordedTimesToArchiveRecord(Storage.load("recordedTimes") or {}))
 
