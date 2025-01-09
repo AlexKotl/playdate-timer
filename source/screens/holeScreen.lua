@@ -17,8 +17,7 @@ local holeScreen = gfx.image.new("assets/holeScreen")
 local cloudsPosition = 0
 local splash = Splash:init()
 local sounds = {
-    swap = playdate.sound.fileplayer.new("sounds/swap.mp3"),
-    upgrade = playdate.sound.fileplayer.new("sounds/upgrade.mp3")
+    swap = playdate.sound.fileplayer.new("sounds/swap.mp3")
 }
 
 local function drawMenu()
@@ -258,7 +257,6 @@ function HoleScreen.AButtonDown()
         isConfirmationVisible = false
         isMenuVisible = false
         splash:run()
-        sounds.upgrade:play()
     elseif isNotEnoughModalVisible then
         isNotEnoughModalVisible = false
     elseif isMenuVisible then
