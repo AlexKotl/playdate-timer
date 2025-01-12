@@ -124,7 +124,8 @@ local function updateScreen()
     end
     gfx.setFont(fontBigger)
 
-    gfx.drawText("Today record: " .. Utils.secondsToTime(totalTime, true), 20, 20)
+    gfx.drawText("Today: ", 20, 20)
+    gfx.drawText(Utils.secondsToTime(totalTime, true), 85, 20)
 
     if isRunning then
         local displayTime = (playdate.getSecondsSinceEpoch() - startTime)
