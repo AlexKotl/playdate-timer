@@ -291,6 +291,6 @@ function ReportScreen.rightButtonDown()
 end
 
 function ReportScreen.BButtonDown()
-    ScreenManager.instance:showScreen("timer")
+    ScreenManager.instance:showScreen("hole")
     sounds.swap:play()
 end

@@ -28,6 +28,11 @@ This app has 3 screens: Timer Tracker, Reports, Rabbit's hole.
 
 **Rebbit's hole**. In the end of every day you will *earn* money for tracked time. Improve life of the Rabbit with buying new furniture and other things. This was done to help you get used to time tracking and make you more productive.
 
+## Running
+
+To run locally, type `./build.sh`. This will build and launch emulator.
+VSCode will rebuild each time on file save. Edit .vscode/settings.json to change this.
+
 ## Links
 
 - Playdate SDK: https://sdk.play.date/2.6.2/Inside%20Playdate.html
